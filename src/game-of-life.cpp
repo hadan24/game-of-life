@@ -5,5 +5,16 @@
 
 int main()
 {
-    std::cout << "hallo :D" << std::endl;
+    const int w = 700;
+    const int h = 700;
+    InitWindow(w, h, "test");
+
+    while (!WindowShouldClose())
+    {
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+        EndDrawing();
+    }
+
+    CloseWindow();
 }
