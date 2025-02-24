@@ -1,5 +1,5 @@
-#include "imgui/imgui.h"
-#include "rlimgui/rlimgui.h"
+#include "imgui.h"
+#include "rlimgui.h"
 #include "raylib.h"
 
 int main()
@@ -13,8 +13,8 @@ int main()
     while (!WindowShouldClose())
     {
         BeginDrawing();
-        ClearBackground(RAYWHITE);
         rlImGuiBegin();
+        ClearBackground(RAYWHITE);
 
         ImGui::Begin("hallo :D", NULL);
         ImGui::Text("hallo from ImGui :D");

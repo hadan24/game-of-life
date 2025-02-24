@@ -14,17 +14,17 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="dep\imgui\imconfig.h" />
-    <ClInclude Include="dep\imgui\imgui.h" />
-    <ClInclude Include="dep\imgui\imgui_internal.h" />
-    <ClInclude Include="dep\imgui\imgui_stdlib.h" />
-    <ClInclude Include="dep\imgui\imstb_rectpack.h" />
-    <ClInclude Include="dep\imgui\imstb_textedit.h" />
-    <ClInclude Include="dep\imgui\imstb_truetype.h" />
-    <ClInclude Include="dep\rlimgui\extras\FA6FreeSolidFontData.h" />
-    <ClInclude Include="dep\rlimgui\extras\IconsFontAwesome6.h" />
-    <ClInclude Include="dep\rlimgui\imgui_impl_raylib.h" />
-    <ClInclude Include="dep\rlimgui\rlImGui.h" />
-    <ClInclude Include="dep\rlimgui\rlImGuiColors.h" />
+    <ClInclude Include="dep\include\imconfig.h" />
+    <ClInclude Include="dep\include\imgui.h" />
+    <ClInclude Include="dep\include\imgui_internal.h" />
+    <ClInclude Include="dep\include\imgui_stdlib.h" />
+    <ClInclude Include="dep\include\imstb_rectpack.h" />
+    <ClInclude Include="dep\include\imstb_textedit.h" />
+    <ClInclude Include="dep\include\imstb_truetype.h" />
+    <ClInclude Include="dep\include\extras\FA6FreeSolidFontData.h" />
+    <ClInclude Include="dep\include\extras\IconsFontAwesome6.h" />
+    <ClInclude Include="dep\include\imgui_impl_raylib.h" />
+    <ClInclude Include="dep\include\rlImGui.h" />
+    <ClInclude Include="dep\include\rlImGuiColors.h" />
   </ItemGroup>
 </Project>
