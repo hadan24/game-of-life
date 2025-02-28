@@ -14,7 +14,7 @@ int main()
     {
         BeginDrawing();
         rlImGuiBegin();
-        ClearBackground(RAYWHITE);
+        ClearBackground(DARKGRAY);
 
         ImGui::Begin("hallo :D", NULL);
         ImGui::Text("hallo from ImGui :D");
