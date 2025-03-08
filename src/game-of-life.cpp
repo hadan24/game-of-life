@@ -1,29 +1,24 @@
-#include "imgui.h"
-#include "rlimgui.h"
-#include "raylib.h"
+#include "game-of-life.h"
 
-int main()
-{
-    const int w = 700;
-    const int h = 700;
-    InitWindow(w, h, "test");
-    SetTargetFPS(144);
-    rlImGuiSetup(true);
+namespace Life {
+    void GameSetup() {
+        InitWindow(SCREEN_W, SCREEN_H, "test");
+        SetTargetFPS(144);
+        rlImGuiSetup(true);
+    }
 
-    while (!WindowShouldClose())
-    {
+    void DrawBegin() {
         BeginDrawing();
         rlImGuiBegin();
-        ClearBackground(DARKGRAY);
+    }
 
-        ImGui::Begin("hallo :D", NULL);
-        ImGui::Text("hallo from ImGui :D");
-        ImGui::End();
-
+    void DrawEnd() {
         rlImGuiEnd();
         EndDrawing();
     }
 
-    rlImGuiShutdown();
-    CloseWindow();
+    void GameTeardown() {
+        rlImGuiShutdown();
+        CloseWindow();
+    }
 }
