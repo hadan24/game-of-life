@@ -165,6 +165,7 @@
     <ClCompile Include="dep\imgui\imgui_tables.cpp" />
     <ClCompile Include="dep\imgui\imgui_widgets.cpp" />
     <ClCompile Include="dep\rlimgui\rlImGui.cpp" />
+    <ClCompile Include="src\grid.cpp" />
     <ClCompile Include="src\game-of-life.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
@@ -184,6 +185,7 @@
     <ClInclude Include="dep\include\imgui_impl_raylib.h" />
     <ClInclude Include="dep\include\rlImGui.h" />
     <ClInclude Include="dep\include\rlImGuiColors.h" />
+    <ClInclude Include="src\grid.h" />
     <ClInclude Include="src\game-of-life.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

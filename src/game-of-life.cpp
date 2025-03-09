@@ -1,8 +1,6 @@
 #include "game-of-life.h"
 
 namespace Life {
-    int cellSize = 20;
-
     void GameSetup() {
         InitWindow(SCREEN_W, SCREEN_H, "test");
         SetTargetFPS(144);
@@ -11,6 +9,7 @@ namespace Life {
     void DrawBegin() {
         BeginDrawing();
         rlImGuiBegin();
+        ClearBackground(BLACK);
     }
     void DrawEnd() {
         rlImGuiEnd();
@@ -28,36 +27,42 @@ namespace Life {
     }
 }
 
-void App() {
+static void debugWindow(const Life::IntVec2& mousedCell) {
+    ImGui::Begin("first gui window", NULL);
+    ImGui::Text("hallo from ImGui :D");
+    ImGui::NewLine();
+    ImGui::Text("grid width: %d", Life::SCREEN_W / Life::cellSize);
+    ImGui::Text("grid height: %d", Life::SCREEN_H / Life::cellSize);
+    ImGui::NewLine();
+    ImGui::Text("mouse x: %d", Life::PxToCellNum(mousedCell.x));
+    ImGui::Text("mouse y: %d", Life::PxToCellNum(mousedCell.y));
+    ImGui::End();
+}
+
+void Game() {
     using Life::SCREEN_H, Life::SCREEN_W, Life::cellSize;
     using Life::CellToPx, Life::PxToCellNum, Life::PxToCellVis;
 
     while (!WindowShouldClose())
     {
         Life::DrawBegin();
-        ClearBackground(BLACK);
 
         for (int i = 0; i < SCREEN_W; i++)
             DrawLine(CellToPx(i), 0, CellToPx(i), SCREEN_H, DARKGRAY);
         for (int j = 0; j < SCREEN_H; j++)
             DrawLine(0, CellToPx(j), SCREEN_W, CellToPx(j), DARKGRAY);
 
-        Vector2 mouse = GetMousePosition();
+        Life::IntVec2 mousedCell = {
+            static_cast<int>(GetMouseX()),
+            static_cast<int>(GetMouseY())
+        };
         DrawRectangle(
-            PxToCellVis(mouse.x),
-            PxToCellVis(mouse.y),
+            PxToCellVis(mousedCell.x),
+            PxToCellVis(mousedCell.y),
             cellSize, cellSize, BLUE
         );
 
-        ImGui::Begin("first gui window", NULL);
-        ImGui::Text("hallo from ImGui :D");
-        ImGui::NewLine();
-        ImGui::Text("grid width: %d", SCREEN_W / cellSize);
-        ImGui::Text("grid height: %d", SCREEN_H / cellSize);
-        ImGui::NewLine();
-        ImGui::Text("mouse x: %d", PxToCellNum((int)mouse.x));
-        ImGui::Text("mouse y: %d", PxToCellNum((int)mouse.y));
-        ImGui::End();
+        debugWindow(mousedCell);
 
         Life::DrawEnd();
     }

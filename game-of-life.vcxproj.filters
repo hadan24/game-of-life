@@ -10,6 +10,7 @@
     <ClCompile Include="dep\imgui\imgui_widgets.cpp" />
     <ClCompile Include="dep\rlimgui\rlImGui.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\grid.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
@@ -28,5 +29,6 @@
     <ClInclude Include="dep\include\rlImGui.h" />
     <ClInclude Include="dep\include\rlImGuiColors.h" />
     <ClInclude Include="src\game-of-life.h" />
+    <ClInclude Include="src\grid.h" />
   </ItemGroup>
 </Project>

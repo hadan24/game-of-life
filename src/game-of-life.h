@@ -7,12 +7,9 @@
 namespace Life {
     constexpr int SCREEN_W = 1280;
     constexpr int SCREEN_H = 720;
-    extern int cellSize;
+    inline int cellSize = 20;
 
-    struct IntVec2 {
-        int x;
-        int y;
-    };
+    struct IntVec2 { int x, y; };
 
     void GameSetup();
     void DrawBegin();
@@ -24,4 +21,4 @@ namespace Life {
     int PxToCellVis(int pxCoord);
 }
 
-void App();
+void Game();
