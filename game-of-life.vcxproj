@@ -185,7 +185,6 @@
     <ClInclude Include="dep\include\imgui_impl_raylib.h" />
     <ClInclude Include="dep\include\rlImGui.h" />
     <ClInclude Include="dep\include\rlImGuiColors.h" />
-    <ClInclude Include="src\grid.h" />
     <ClInclude Include="src\game-of-life.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

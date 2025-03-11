@@ -2,9 +2,9 @@
 
 int main()
 {
-    Life::GameSetup();
+    Life::gameSetup();
 
     Game();
 
-    Life::GameTeardown();
+    Life::gameTeardown();
 }

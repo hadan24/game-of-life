@@ -29,6 +29,5 @@
     <ClInclude Include="dep\include\rlImGui.h" />
     <ClInclude Include="dep\include\rlImGuiColors.h" />
     <ClInclude Include="src\game-of-life.h" />
-    <ClInclude Include="src\grid.h" />
   </ItemGroup>
 </Project>
