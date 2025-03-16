@@ -17,31 +17,30 @@ namespace Life {
     void drawEnd();
     void gameTeardown();
 
+    int cellToPx(int cellCoord);
+    int pxToCellNum(int pxCoord);
+    int pxToCellVis(int pxCoord);
+
     class Grid {
     public:
-        using size_type = std::vector<char>::size_type;
-        const size_type width = SCREEN_W / cellSize;
-        const size_type height = SCREEN_H / cellSize;
+        const int width = SCREEN_W / cellSize;
+        const int height = SCREEN_H / cellSize;
 
         Grid();
         // constructor that takes list of cell coords to start alive
 
-        bool getCell(size_type x, size_type y) const;
-        void flipCell(size_type x, size_type y);
-        void spawnCell(size_type x, size_type y);
-        void killCell(size_type x, size_type y);
+        bool getCell(int x, int y) const;
+        void flipCell(int x, int y);
+        void spawnCell(int x, int y);
+        void killCell(int x, int y);
         void advanceTicks(int toAdv = 1);
 
-    private:
+    //private:
         std::vector<char> m_data;
 
         void advTick(); // helper
     };
     void drawGrid(const Grid& grid);
-
-    int cellToPx(int cellCoord);
-    int pxToCellNum(int pxCoord);
-    int pxToCellVis(int pxCoord);
 }
 
 void Game();

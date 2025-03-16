@@ -1,26 +1,25 @@
 #include "game-of-life.h"
 #include <array>
-using size_type = std::vector<char>::size_type;
 
 
 Life::Grid::Grid() : m_data( std::move(std::vector<char>(width*height, false)) ) {}
 
-bool Life::Grid::getCell(size_type x, size_type y) const {
+bool Life::Grid::getCell(int x, int y) const {
     return m_data[x + y*width];
 }
 
-void Life::Grid::flipCell(size_type x, size_type y) {
+void Life::Grid::flipCell(int x, int y) {
     m_data[x + y*width] = m_data[x + y*width] ? false : true;
 }
 
-void Life::Grid::spawnCell(size_type x, size_type y) { m_data[x + y*width] = true; }
+void Life::Grid::spawnCell(int x, int y) { m_data[x + y*width] = true; }
 
-void Life::Grid::killCell(size_type x, size_type y) { m_data[x + y*width] = false; }
+void Life::Grid::killCell(int x, int y) { m_data[x + y*width] = false; }
 
 void Life::Grid::advTick() {
     // up, up-right, right, down-right, down, etc
     std::array<IntVec2, 8> dirs (
-        { {0,-1}, {1,-1}, {1,0}, {1,1}, {0,1}, {-1,1}, {-1,0}, {-1,1} }
+        { {0,-1}, {1,-1}, {1,0}, {1,1}, {0,1}, {-1,1}, {-1,0}, {-1,-1} }
     );
 
     for (int i = 0; i < width*height; i++) {
@@ -30,7 +29,7 @@ void Life::Grid::advTick() {
             bool atXEdge = (i%width == 0 && d.x == -1) || (i%width == width-1 && d.x == 1);
             if (atYEdge || atXEdge)
                 continue;
-            else if (m_data[i+d.x + d.y*width])
+            else if (m_data[i + d.x + d.y * width])
                 aliveNeighbors++;
         }
 
