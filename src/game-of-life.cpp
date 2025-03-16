@@ -24,7 +24,7 @@ namespace Life {
     void drawGrid(const Grid& grid) {
         for (int i = 0; i < grid.width; i++) {
             for (int j = 0; j < grid.height; j++) {
-                if (grid.getCell(i, j))
+                if (grid.checkCell(i, j))
                     DrawRectangle(
                         cellToPx(i), cellToPx(j),
                         cellSize, cellSize, BLUE
@@ -74,7 +74,7 @@ static void debugCell(const Life::Grid& g, const Life::IntVec2& mousedCell) {
     NewLine();
 
     for (auto& d : dirs) {
-        bool tempY = (cellNum + (d.y * g.width) < 0) || (cellNum + (d.y * g.width) >= g.m_data.size());
+        bool tempY = (cellNum + (d.y * g.width) < 0) || (cellNum + (d.y * g.width) >= g.width*g.height);
         bool tempX = (cellNum % g.width == 0 && d.x == -1) || (cellNum % g.width == g.width - 1 && d.x == 1);
 
         atYEdge = atYEdge || tempY;
@@ -82,7 +82,7 @@ static void debugCell(const Life::Grid& g, const Life::IntVec2& mousedCell) {
 
         if (tempY || tempX)
             continue;
-        else if ( g.m_data[cellNum + d.x + d.y * g.width] )
+        else if ( g.checkCell(Life::pxToCellNum(mousedCell.x)+d.x, Life::pxToCellNum(mousedCell.y)+d.y) )
             aliveNeighbors++;
     }
 

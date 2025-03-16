@@ -29,15 +29,16 @@ namespace Life {
         Grid();
         // constructor that takes list of cell coords to start alive
 
-        bool getCell(int x, int y) const;
+        bool checkCell(int x, int y) const;
         void flipCell(int x, int y);
         void spawnCell(int x, int y);
         void killCell(int x, int y);
         void advanceTicks(int toAdv = 1);
 
-    //private:
+    private:
         std::vector<char> m_data;
 
+        enum CellState { ALIVE, DEAD };
         void advTick(); // helper
     };
     void drawGrid(const Grid& grid);
