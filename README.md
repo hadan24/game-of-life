@@ -21,7 +21,7 @@ For now, the dev build steps are simply:
 Number  | Goal          | Timeline      | Notes
 --|---------------------|---------------|--------
 1 | Render Grid & Cells | 3/3 - 3/7     | - done 3/7 <br> [Github issue here](https://github.com/hadan24/game-of-life/issues/1)
-2 | Store Cell States   | 3/10 - 3/14   | - <br> [Github issue here](https://github.com/hadan24/game-of-life/issues/2)
+2 | Store Cell States   | 3/10 - 3/14   | - done 3/16 (technically 3/9, after was working on [adding sim rules](https://github.com/hadan24/game-of-life/issues/4) to ensure grid worked)<br> [Github issue here](https://github.com/hadan24/game-of-life/issues/2)
 3 | Tick vs Frame Rate  | 3/17 - 3/28   | - <br> [Github issue here](https://github.com/hadan24/game-of-life/issues/3)
 4 | Add Sim Rules       | 3/31 - 4/11   | - <br> [Github issue here](https://github.com/hadan24/game-of-life/issues/4)
 5 | Toggle-able Cells   | 4/14 - 4/25   | - <br> [Github issue here](https://github.com/hadan24/game-of-life/issues/5)
