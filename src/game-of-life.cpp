@@ -59,9 +59,10 @@ static void debugWindow(const Life::IntVec2& mousedCell) {
 }
 static void debugCell(const Life::Grid& g, const Life::IntVec2& mousedCell) {
     using namespace ImGui;
+    using Life::pxToCellNum;
 
-    int cellNum = Life::pxToCellNum(mousedCell.x) + (Life::pxToCellNum(mousedCell.y) * g.width);
-    std::array<Life::IntVec2, 8> dirs(
+    int cellNum = pxToCellNum(mousedCell.x) + (pxToCellNum(mousedCell.y) * g.width);
+    std::array<Life::IntVec2, 8> dirs (
         { {0,-1}, {1,-1}, {1,0}, {1,1}, {0,1}, {-1,1}, {-1,0}, {-1,-1} }
     );
 
@@ -74,15 +75,17 @@ static void debugCell(const Life::Grid& g, const Life::IntVec2& mousedCell) {
     NewLine();
 
     for (auto& d : dirs) {
-        bool tempY = (cellNum + (d.y * g.width) < 0) || (cellNum + (d.y * g.width) >= g.width*g.height);
-        bool tempX = (cellNum % g.width == 0 && d.x == -1) || (cellNum % g.width == g.width - 1 && d.x == 1);
-
+        bool tempY = (cellNum + (d.y*g.width) < 0)
+            || (cellNum + (d.y*g.width) >= g.width*g.height);
         atYEdge = atYEdge || tempY;
+
+        bool tempX = (cellNum%g.width == 0 && d.x == -1)
+            || (cellNum%g.width == g.width-1 && d.x == 1);
         atXEdge = atXEdge || tempX;
 
         if (tempY || tempX)
             continue;
-        else if ( g.checkCell(Life::pxToCellNum(mousedCell.x)+d.x, Life::pxToCellNum(mousedCell.y)+d.y) )
+        else if ( g.checkCell(pxToCellNum(mousedCell.x)+d.x, pxToCellNum(mousedCell.y)+d.y) )
             aliveNeighbors++;
     }
 
@@ -95,14 +98,10 @@ static void debugCell(const Life::Grid& g, const Life::IntVec2& mousedCell) {
 
     Text("neighbors: %d", aliveNeighbors);
 
-
     End();
 }
 
 void Game() {
-    using Life::SCREEN_H, Life::SCREEN_W, Life::cellSize;
-    using Life::cellToPx, Life::pxToCellVis, Life::pxToCellNum;
-
     Life::Grid g;
     Life::IntVec2 center = {g.width / 2, g.height / 2};
     g.spawnCell(center.x, center.y);
@@ -117,7 +116,9 @@ void Game() {
 
         Life::drawGrid(g);
 
-        if (IsKeyPressed(KEY_SPACE))
+        if (IsKeyPressed(KEY_ENTER))
+            g.advanceTicks();
+        if (IsKeyDown(KEY_SPACE))
             g.advanceTicks();
 
         Life::IntVec2 mousedCell = {
@@ -125,12 +126,11 @@ void Game() {
             static_cast<int>(GetMouseY())
         };
         DrawRectangle(
-            pxToCellVis(mousedCell.x),
-            pxToCellVis(mousedCell.y),
-            cellSize, cellSize, BLUE
+            Life::pxToCellVis(mousedCell.x),
+            Life::pxToCellVis(mousedCell.y),
+            Life::cellSize, Life::cellSize, BLUE
         );
         debugCell(g, mousedCell);
-
         debugWindow(mousedCell);
 
         Life::drawEnd();
