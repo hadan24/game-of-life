@@ -33,7 +33,7 @@ namespace Life {
         void flipCell(int x, int y);
         void spawnCell(int x, int y);
         void killCell(int x, int y);
-        void advanceTicks(int toAdv = 1);
+        void advanceTicks(int numTicks = 1);
 
     private:
         std::vector<char> m_data;

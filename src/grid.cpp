@@ -28,7 +28,7 @@ void Life::Grid::advTick() {
         { {0,-1}, {1,-1}, {1,0}, {1,1}, {0,1}, {-1,1}, {-1,0}, {-1,-1} }
     );
 
-    std::vector<char> liveNeighbors(width*height, 0);
+    std::vector<char> neighbors(width*height, 0);
 
     for (int i = 0; i < m_data.size(); i++) {
         for (auto& d : dirs) {
@@ -37,16 +37,13 @@ void Life::Grid::advTick() {
             if (atYEdge || atXEdge)
                 continue;
             else if (m_data[i+d.x + d.y*width] == CellState::ALIVE)
-                liveNeighbors[i]++;
+                neighbors[i]++;
         }
     }
-    for (int i = 0; i < liveNeighbors.size(); i++) {
-        if (liveNeighbors[i] == 3)  // cell comes/stays alive, guaranteed
+    for (int i = 0; i < neighbors.size(); i++) {
+        if ( neighbors[i] == 3 || (m_data[i] == CellState::ALIVE && neighbors[i] == 2) )
             m_data[i] = CellState::ALIVE;
-        else if (m_data[i] == CellState::DEAD || liveNeighbors[i] == 2)
-            continue;   // cell stays same state, whether dead or alive
-        else
-            m_data[i] = CellState::DEAD;    // cell dies otherwise
+        else m_data[i] = CellState::DEAD;
     }
 }
 

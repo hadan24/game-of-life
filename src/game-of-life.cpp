@@ -1,4 +1,5 @@
 #include "game-of-life.h"
+#include "../grid-bits.h"
 #include <array>
 
 namespace Life {
@@ -21,7 +22,7 @@ namespace Life {
         CloseWindow();
     }
 
-    void drawGrid(const Grid& grid) {
+    void drawGrid(const GridBits& grid) {
         for (int i = 0; i < grid.width; i++) {
             for (int j = 0; j < grid.height; j++) {
                 if (grid.checkCell(i, j))
@@ -45,7 +46,7 @@ namespace Life {
     }
 }
 
-static void debugWindow(const Life::IntVec2& mousedCell) {
+static void debugWindow(const Life::IntVec2& mousedCell, int ticks) {
     using namespace ImGui;
     Begin("first gui window", NULL);
     Text("hallo from ImGui :D");
@@ -55,6 +56,8 @@ static void debugWindow(const Life::IntVec2& mousedCell) {
     NewLine();
     Text("mouse x: %d", Life::pxToCellNum(mousedCell.x));
     Text("mouse y: %d", Life::pxToCellNum(mousedCell.y));
+    NewLine();
+    Text("ticks passed: %d", ticks);
     End();
 }
 static void debugCell(const Life::Grid& g, const Life::IntVec2& mousedCell) {
@@ -100,9 +103,48 @@ static void debugCell(const Life::Grid& g, const Life::IntVec2& mousedCell) {
 
     End();
 }
+static void debugCellBits(const GridBits& g, const Life::IntVec2& mousedCell) {
+    using namespace ImGui;
+    using Life::pxToCellNum;
+
+    int cellNum = pxToCellNum(mousedCell.x) + (pxToCellNum(mousedCell.y) * g.width);
+    std::array<Life::IntVec2, 8> dirs(
+        { {0,-1}, {1,-1}, {1,0}, {1,1}, {0,1}, {-1,1}, {-1,0}, {-1,-1} }
+    );
+
+    Begin("cell examination", NULL);
+
+    bool atYEdge = false, atXEdge = false;
+    int cell = 0;
+
+    Text("cell num: %d", cellNum);
+    NewLine();
+
+    for (auto& d : dirs) {
+        bool tempY = (cellNum + (d.y * g.width) < 0)
+            || (cellNum + (d.y * g.width) >= g.width * g.height);
+        atYEdge = atYEdge || tempY;
+
+        bool tempX = (cellNum % g.width == 0 && d.x == -1)
+            || (cellNum % g.width == g.width - 1 && d.x == 1);
+        atXEdge = atXEdge || tempX;
+    }
+    cell = g.getCell( pxToCellNum(mousedCell.x), pxToCellNum(mousedCell.y) );
+
+    if (atYEdge)
+        Text("at Y edge?: true");
+    else Text("at Y edge?: false");
+    if (atXEdge)
+        Text("at X edge?: true");
+    else Text("at X edge?: false");
+
+    Text("cell data + neighbors: %d (%d + %d)", cell, cell & (1<<4), cell & ~(1 << 4));
+
+    End();
+}
 
 void Game() {
-    Life::Grid g;
+    GridBits g;
     Life::IntVec2 center = {g.width / 2, g.height / 2};
     g.spawnCell(center.x, center.y);
     g.spawnCell(center.x, center.y-1);
@@ -110,16 +152,22 @@ void Game() {
     g.spawnCell(center.x, center.y+1);
     g.spawnCell(center.x+1, center.y+1);
 
+    int ticks = 0;
+
     while (!WindowShouldClose())
     {
         Life::drawBegin();
 
         Life::drawGrid(g);
 
-        if (IsKeyPressed(KEY_ENTER))
+        if (IsKeyPressed(KEY_ENTER)) {
+            ticks++;
             g.advanceTicks();
-        if (IsKeyDown(KEY_SPACE))
+        }
+        if (IsKeyDown(KEY_SPACE)) {
+            ticks++;
             g.advanceTicks();
+        }
 
         Life::IntVec2 mousedCell = {
             static_cast<int>(GetMouseX()),
@@ -130,8 +178,8 @@ void Game() {
             Life::pxToCellVis(mousedCell.y),
             Life::cellSize, Life::cellSize, BLUE
         );
-        debugCell(g, mousedCell);
-        debugWindow(mousedCell);
+        debugCellBits(g, mousedCell);
+        debugWindow(mousedCell, ticks);
 
         Life::drawEnd();
     }

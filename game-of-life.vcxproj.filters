@@ -11,6 +11,7 @@
     <ClCompile Include="dep\rlimgui\rlImGui.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\grid.cpp" />
+    <ClCompile Include="grid-bits.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
@@ -29,5 +30,6 @@
     <ClInclude Include="dep\include\rlImGui.h" />
     <ClInclude Include="dep\include\rlImGuiColors.h" />
     <ClInclude Include="src\game-of-life.h" />
+    <ClInclude Include="grid-bits.h" />
   </ItemGroup>
 </Project>
