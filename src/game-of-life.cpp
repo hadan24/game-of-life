@@ -43,63 +43,35 @@ namespace Life {
     int pxToCellVis(int pxCoord) {
         return static_cast<int>(pxCoord / cellSize) * cellSize;
     }
+
+    void handleMouse(Grid& g, const IntVec2& mouseRaw) {
+        DrawRectangle(
+            pxToCellVis(mouseRaw.x), pxToCellVis(mouseRaw.y),
+            cellSize, cellSize, DARKBLUE
+        );
+
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !ImGui::GetIO().WantCaptureMouse)
+            g.spawnCell( pxToCellNum(mouseRaw.x), pxToCellNum(mouseRaw.y) );
+        if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
+            g.killCell( pxToCellNum(mouseRaw.x), pxToCellNum(mouseRaw.y) );
+    }
 }
 
-static void debugWindow(const Life::IntVec2& mousedCell, int ticks) {
+static void debugWindow(const Life::Grid& g, const Life::IntVec2& mousedCell, int ticks) {
     using namespace ImGui;
+
+    int cellX = Life::pxToCellNum(mousedCell.x), cellY = Life::pxToCellNum(mousedCell.y);
     Begin("first gui window", NULL);
     Text("hallo from ImGui :D");
     NewLine();
     Text("grid width: %d", Life::SCREEN_W / Life::cellSize);
     Text("grid height: %d", Life::SCREEN_H / Life::cellSize);
     NewLine();
-    Text("mouse x: %d", Life::pxToCellNum(mousedCell.x));
-    Text("mouse y: %d", Life::pxToCellNum(mousedCell.y));
+    Text("mouse x: %d (%d)", cellX, mousedCell.x);
+    Text("mouse y: %d (%d)", cellY, mousedCell.y);
+    Text( "num neighbors: %d", g.neighbors(cellX, cellY) );
     NewLine();
     Text("ticks passed: %d", ticks);
-    End();
-}
-static void debugCell(const Life::Grid& g, const Life::IntVec2& mousedCell) {
-    using namespace ImGui;
-    using Life::pxToCellNum;
-
-    int cellNum = pxToCellNum(mousedCell.x) + (pxToCellNum(mousedCell.y) * g.width);
-    std::array<Life::IntVec2, 8> dirs (
-        { {0,-1}, {1,-1}, {1,0}, {1,1}, {0,1}, {-1,1}, {-1,0}, {-1,-1} }
-    );
-
-    Begin("cell examination", NULL);
-
-    bool atYEdge = false, atXEdge = false;
-    int aliveNeighbors = 0;
-
-    Text("cell num: %d", cellNum);
-    NewLine();
-
-    for (auto& d : dirs) {
-        bool tempY = (cellNum + (d.y*g.width) < 0)
-            || (cellNum + (d.y*g.width) >= g.width*g.height);
-        atYEdge = atYEdge || tempY;
-
-        bool tempX = (cellNum%g.width == 0 && d.x == -1)
-            || (cellNum%g.width == g.width-1 && d.x == 1);
-        atXEdge = atXEdge || tempX;
-
-        if (tempY || tempX)
-            continue;
-        else if ( g.isAlive(pxToCellNum(mousedCell.x)+d.x, pxToCellNum(mousedCell.y)+d.y) )
-            aliveNeighbors++;
-    }
-
-    if (atYEdge)
-        Text("at Y edge?: true");
-    else Text("at Y edge?: false");
-    if (atXEdge)
-        Text("at X edge?: true");
-    else Text("at X edge?: false");
-
-    Text("neighbors: %d", aliveNeighbors);
-
     End();
 }
 
@@ -121,25 +93,16 @@ void Game() {
 
         Life::drawGrid(g);
 
-        if (IsKeyPressed(KEY_ENTER)) {
+        if (IsKeyPressed(KEY_ENTER) || IsKeyDown(KEY_SPACE)) {
             ticks++;
             g.advanceTicks();
         }
-        if (IsKeyDown(KEY_SPACE)) {
-            ticks++;
-            g.advanceTicks();
-        }
-
         Life::IntVec2 mousedCell = {
             static_cast<int>(GetMouseX()),
             static_cast<int>(GetMouseY())
         };
-        DrawRectangle(
-            Life::pxToCellVis(mousedCell.x),
-            Life::pxToCellVis(mousedCell.y),
-            Life::cellSize, Life::cellSize, BLUE
-        );
-        debugWindow(mousedCell, ticks);
+        Life::handleMouse(g, mousedCell);
+        debugWindow(g, mousedCell, ticks);
 
         Life::drawEnd();
     }

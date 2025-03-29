@@ -35,6 +35,8 @@ namespace Life {
         void killCell(int x, int y);
         void advanceTicks(int numTicks = 1);
 
+        int neighbors(int x, int y) const;  // for debugging
+
     private:
         std::vector<char> m_data;
         std::vector<char> m_neighbors;
@@ -43,6 +45,7 @@ namespace Life {
         void advTick(); // helper
     };
     void drawGrid(const Grid& grid);
+    void handleMouse(Grid& g, const IntVec2& mouseRaw);
 }
 
 void Game();

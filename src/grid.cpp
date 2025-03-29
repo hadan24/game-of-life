@@ -21,27 +21,37 @@ void Life::Grid::flipCell(int x, int y) {
     if (m_data[cell] == CellState::ALIVE) {
         m_data[cell] = CellState::DEAD;
         for (auto& d : dirs)
-            m_neighbors[cell+d.x + d.y*width]++;
+            m_neighbors[cell+d.x + d.y*width]--;
     }
     else {
         m_data[cell] = CellState::ALIVE;
         for (auto& d : dirs)
-            m_neighbors[cell+d.x + d.y*width]--;
+            m_neighbors[cell+d.x + d.y*width]++;
     }
 }
 
 void Life::Grid::spawnCell(int x, int y) {
     int cell = x + y * width;
-    m_data[x + y*width] = CellState::ALIVE;
+    if (m_data[cell] == CellState::ALIVE)
+        return;
+
+    m_data[cell] = CellState::ALIVE;
     for (auto& d : dirs)
         m_neighbors[cell + d.x + d.y * width]++;
 }
 
 void Life::Grid::killCell(int x, int y) {
     int cell = x + y * width;
-    m_data[x + y * width] = CellState::DEAD;
+    if (m_data[cell] == CellState::DEAD)
+        return;
+
+    m_data[cell] = CellState::DEAD;
     for (auto& d : dirs)
         m_neighbors[cell + d.x + d.y * width]--;
+}
+
+int Life::Grid::neighbors(int x, int y) const {
+    return m_neighbors[x + y * width];
 }
 
 void Life::Grid::advTick() {
@@ -65,7 +75,7 @@ void Life::Grid::advTick() {
     }
 }
 
-void Life::Grid::advanceTicks(int numTicks) {   // naive direct implementation
+void Life::Grid::advanceTicks(int numTicks) {
     for (int i = 0; i < numTicks; i++)
         advTick();
 }
