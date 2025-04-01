@@ -5,7 +5,8 @@
 #include "raylib.h"
 #include <vector>
 
-namespace Life {
+namespace Life
+{
     constexpr int SCREEN_W = 1280;
     constexpr int SCREEN_H = 720;
     inline int cellSize = 20;
@@ -21,7 +22,8 @@ namespace Life {
     int pxToCellNum(int pxCoord);
     int pxToCellVis(int pxCoord);
 
-    class Grid {
+    class Grid
+    {
     public:
         const int width = SCREEN_W / cellSize;
         const int height = SCREEN_H / cellSize;
@@ -45,7 +47,8 @@ namespace Life {
         void advTick(); // helper
     };
     void drawGrid(const Grid& grid);
-    void handleMouse(Grid& g, const IntVec2& mouseRaw);
 }
 
 void Game();
+void update(Life::Grid& g, const Life::IntVec2& mouse, int& ticks);
+void draw(const Life::Grid& g, const Life::IntVec2& mouse);

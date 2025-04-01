@@ -1,36 +1,37 @@
 #include "game-of-life.h"
 #include <array>
 
-namespace Life {
-    void gameSetup() {
+namespace Life
+{
+    void gameSetup()
+    {
         InitWindow(SCREEN_W, SCREEN_H, "test");
         SetTargetFPS(144);
         rlImGuiSetup(true);
     }
-    void drawBegin() {
+    void drawBegin()
+    {
         BeginDrawing();
         rlImGuiBegin();
         ClearBackground(BLACK);
     }
-    void drawEnd() {
+    void drawEnd()
+    {
         rlImGuiEnd();
         EndDrawing();
     }
-    void gameTeardown() {
+    void gameTeardown()
+    {
         rlImGuiShutdown();
         CloseWindow();
     }
 
-    void drawGrid(const Grid& grid) {
-        for (int i = 0; i < grid.width; i++) {
-            for (int j = 0; j < grid.height; j++) {
+    void drawGrid(const Grid& grid)
+    {
+        for (int i = 0; i < grid.width; i++)
+            for (int j = 0; j < grid.height; j++)
                 if (grid.isAlive(i, j))
-                    DrawRectangle(
-                        cellToPx(i), cellToPx(j),
-                        cellSize, cellSize, BLUE
-                    );
-            }
-        }
+                    DrawRectangle(cellToPx(i), cellToPx(j), cellSize, cellSize, BLUE);
 
         for (int i = 0; i < SCREEN_W; i++)
             DrawLine(cellToPx(i), 0, cellToPx(i), SCREEN_H, DARKGRAY);
@@ -43,19 +44,8 @@ namespace Life {
     int pxToCellVis(int pxCoord) {
         return static_cast<int>(pxCoord / cellSize) * cellSize;
     }
-
-    void handleMouse(Grid& g, const IntVec2& mouseRaw) {
-        DrawRectangle(
-            pxToCellVis(mouseRaw.x), pxToCellVis(mouseRaw.y),
-            cellSize, cellSize, DARKBLUE
-        );
-
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !ImGui::GetIO().WantCaptureMouse)
-            g.spawnCell( pxToCellNum(mouseRaw.x), pxToCellNum(mouseRaw.y) );
-        if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
-            g.killCell( pxToCellNum(mouseRaw.x), pxToCellNum(mouseRaw.y) );
-    }
 }
+
 
 static void debugWindow(const Life::Grid& g, const Life::IntVec2& mousedCell, int ticks) {
     using namespace ImGui;
@@ -69,41 +59,58 @@ static void debugWindow(const Life::Grid& g, const Life::IntVec2& mousedCell, in
     NewLine();
     Text("mouse x: %d (%d)", cellX, mousedCell.x);
     Text("mouse y: %d (%d)", cellY, mousedCell.y);
-    Text( "num neighbors: %d", g.neighbors(cellX, cellY) );
+    Text("num neighbors: %d", g.neighbors(cellX, cellY));
     NewLine();
     Text("ticks passed: %d", ticks);
     End();
 }
-
-
-void Game() {
+void Game()
+{
     Life::Grid g;
-    Life::IntVec2 center = {g.width / 2, g.height / 2};
+    Life::IntVec2 center = { g.width / 2, g.height / 2 };
     g.spawnCell(center.x, center.y);
-    g.spawnCell(center.x, center.y-1);
-    g.spawnCell(center.x-1, center.y);
-    g.spawnCell(center.x, center.y+1);
-    g.spawnCell(center.x+1, center.y+1);
+    g.spawnCell(center.x, center.y - 1);
+    g.spawnCell(center.x - 1, center.y);
+    g.spawnCell(center.x, center.y + 1);
+    g.spawnCell(center.x + 1, center.y + 1);
 
     int ticks = 0;
 
     while (!WindowShouldClose())
     {
-        Life::drawBegin();
-
-        Life::drawGrid(g);
-
-        if (IsKeyPressed(KEY_ENTER) || IsKeyDown(KEY_SPACE)) {
-            ticks++;
-            g.advanceTicks();
-        }
-        Life::IntVec2 mousedCell = {
+        Life::IntVec2 mouseCoords = {
             static_cast<int>(GetMouseX()),
             static_cast<int>(GetMouseY())
         };
-        Life::handleMouse(g, mousedCell);
-        debugWindow(g, mousedCell, ticks);
 
+        update(g, mouseCoords, ticks);
+
+        Life::drawBegin();
+        draw(g, mouseCoords);
+        debugWindow(g, mouseCoords, ticks);
         Life::drawEnd();
     }
+}
+
+void update(Life::Grid& g, const Life::IntVec2& mouse, int& ticks)
+{
+    if (IsKeyPressed(KEY_ENTER) || IsKeyDown(KEY_SPACE))
+    {
+        ticks++;
+        g.advanceTicks();
+    }
+
+    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !ImGui::GetIO().WantCaptureMouse)
+        g.spawnCell(Life::pxToCellNum(mouse.x), Life::pxToCellNum(mouse.y));
+    if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
+        g.killCell(Life::pxToCellNum(mouse.x), Life::pxToCellNum(mouse.y));
+}
+
+void draw(const Life::Grid& g, const Life::IntVec2& mouse)
+{
+    Life::drawGrid(g);
+    DrawRectangle(
+        Life::pxToCellVis(mouse.x), Life::pxToCellVis(mouse.y),
+        Life::cellSize, Life::cellSize, DARKBLUE
+    );
 }
