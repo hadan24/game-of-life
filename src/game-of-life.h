@@ -29,7 +29,7 @@ namespace Life
         const int height = SCREEN_H / cellSize;
 
         Grid();
-        // constructor that takes list of cell coords to start alive
+        Grid(std::vector<IntVec2> live);
 
         bool isAlive(int x, int y) const;
         void flipCell(int x, int y);

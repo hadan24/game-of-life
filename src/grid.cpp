@@ -12,6 +12,14 @@ Life::Grid::Grid() :
     m_neighbors ( std::move(std::vector<char>(width*height, 0)) )
 {}
 
+Life::Grid::Grid(std::vector<IntVec2> live) :
+    m_data( std::move(std::vector<char>(width* height, CellState::DEAD)) ),
+    m_neighbors( std::move(std::vector<char>(width* height, 0)) )
+{
+    for (auto& c : live)
+        spawnCell(c.x, c.y);
+}
+
 bool Life::Grid::isAlive(int x, int y) const {
     return m_data[x + y*width] == CellState::ALIVE;
 }

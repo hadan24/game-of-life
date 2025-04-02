@@ -66,13 +66,17 @@ static void debugWindow(const Life::Grid& g, const Life::IntVec2& mousedCell, in
 }
 void Game()
 {
-    Life::Grid g;
-    Life::IntVec2 center = { g.width / 2, g.height / 2 };
-    g.spawnCell(center.x, center.y);
-    g.spawnCell(center.x, center.y - 1);
-    g.spawnCell(center.x - 1, center.y);
-    g.spawnCell(center.x, center.y + 1);
-    g.spawnCell(center.x + 1, center.y + 1);
+    Life::IntVec2 center = {
+        (Life::SCREEN_W / Life::cellSize) / 2,
+        (Life::SCREEN_H / Life::cellSize) / 2 
+    };
+    Life::Grid g({
+        {center.x, center.y},
+        {center.x, center.y - 1},
+        {center.x - 1, center.y},
+        {center.x, center.y + 1},
+        {center.x + 1, center.y + 1}
+    });
 
     int ticks = 0;
 
