@@ -40,8 +40,6 @@ namespace Life
         void togglePause();
         bool paused() const;
 
-        int neighbors(int x, int y) const;  // for debugging
-
     private:
         std::vector<char> m_data;
         std::vector<char> m_neighbors;
@@ -53,5 +51,5 @@ namespace Life
 }
 
 void Game();
-void update(Life::Grid& g, const Life::IntVec2& mouse, int& ticks);
+void update(Life::Grid& g, const Life::IntVec2& mouse);
 void draw(const Life::Grid& g, const Life::IntVec2& mouse);

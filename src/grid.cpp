@@ -94,8 +94,3 @@ bool Life::Grid::paused() const
 {
     return m_paused;
 }
-
-
-int Life::Grid::neighbors(int x, int y) const {
-    return m_neighbors[x + y * width];
-}

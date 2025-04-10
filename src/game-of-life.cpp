@@ -48,7 +48,7 @@ namespace Life
 }
 
 
-static void debugWindow(const Life::Grid& g, const Life::IntVec2& mousedCell, int ticks) {
+static void debugWindow(const Life::Grid& g, const Life::IntVec2& mousedCell) {
     using namespace ImGui;
 
     int cellX = Life::pxToCellNum(mousedCell.x), cellY = Life::pxToCellNum(mousedCell.y);
@@ -60,11 +60,6 @@ static void debugWindow(const Life::Grid& g, const Life::IntVec2& mousedCell, in
     NewLine();
     Text("mouse x: %d (%d)", cellX, mousedCell.x);
     Text("mouse y: %d (%d)", cellY, mousedCell.y);
-    Text("num neighbors: %d", g.neighbors(cellX, cellY));
-    NewLine();
-    Text("ticks passed: %d", ticks);
-    NewLine();
-    Text("paused?: %d", g.paused());
     End();
 }
 void Game()
@@ -76,11 +71,11 @@ void Game()
         (Life::SCREEN_H / Life::cellSize) / 2 
     };
     Life::Grid g({
-        {center.x, center.y},
-        {center.x, center.y - 1},
-        {center.x - 1, center.y},
-        {center.x, center.y + 1},
-        {center.x + 1, center.y + 1}
+        {center.x,      center.y},
+        {center.x,      center.y - 1},
+        {center.x - 1,  center.y},
+        {center.x,      center.y + 1},
+        {center.x + 1,  center.y + 1}
     });
 
     int ticks_per_sec = 2;
@@ -89,7 +84,6 @@ void Game()
     auto next_tick_time = time_point_cast<milliseconds>(steady_clock::now())
         .time_since_epoch()
         .count();
-    int ticks = 0;
 
     while (!WindowShouldClose())
     {
@@ -97,7 +91,7 @@ void Game()
             static_cast<int>(GetMouseX()),
             static_cast<int>(GetMouseY())
         };
-        update(g, mouseCoords, ticks);
+        update(g, mouseCoords);
 
         int loops = 0;
         auto curr_time = time_point_cast<milliseconds>(steady_clock::now())
@@ -105,32 +99,33 @@ void Game()
             .count();
         while (curr_time > next_tick_time && loops < MAX_FRAMESKIP)
         {
-            if (!g.paused()) {
+            if (!g.paused())
                 g.advanceTick();
-                ticks++;
-            }
             next_tick_time += tick_wait_interval;
             loops++;
         }
 
         Life::drawBegin();
         draw(g, mouseCoords);
-        debugWindow(g, mouseCoords, ticks);
+        debugWindow(g, mouseCoords);
         Life::drawEnd();
     }
 }
 
-void update(Life::Grid& g, const Life::IntVec2& mouse, int& ticks)
+/*
+    to move inside:
+    - MAX_FRAMESKIP
+    - int loops, curr_time, inner while loop
+    - create timing data struct??
+*/
+void update(Life::Grid& g, const Life::IntVec2& mouse)
 {
     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !ImGui::GetIO().WantCaptureMouse)
         g.spawnCell(Life::pxToCellNum(mouse.x), Life::pxToCellNum(mouse.y));
     if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
         g.killCell(Life::pxToCellNum(mouse.x), Life::pxToCellNum(mouse.y));
     if (IsKeyPressed(KEY_ENTER))
-    {
-        ticks++;
         g.advanceTick();
-    }
     if (IsKeyPressed(KEY_SPACE))
         g.togglePause();
 }

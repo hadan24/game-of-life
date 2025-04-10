@@ -24,7 +24,7 @@ Number  | Goal          | Timeline      | Notes
 2 | Store Cell States   | 3/10 - 3/14   | - done 3/16 (technically 3/9, after was working on [adding sim rules](https://github.com/hadan24/game-of-life/issues/4) to ensure grid worked)<br> [Github issue here](https://github.com/hadan24/game-of-life/issues/2)
 3 | Optimize Grid+Ticks | 3/17 - 3/21   | - done 3/27 (after several days of bad sleep and frantic interview prep) <br> [Github issue here](https://github.com/hadan24/game-of-life/issues/8)
 4 | Toggle-able Cells   | 3/24 - 3/28   | - done 3/29 <br> [Github issue here](https://github.com/hadan24/game-of-life/issues/5)
-5 | Tick vs Frame Rate  | 3/31 - 4/11   | - <br> [Github issue here](https://github.com/hadan24/game-of-life/issues/3)
+5 | Tick vs Frame Rate  | 3/31 - 4/11   | - done 4/10 <br> [Github issue here](https://github.com/hadan24/game-of-life/issues/3)
 6 | Create UI           | 4/14 - 4/25   | - <br> [Github issue here](https://github.com/hadan24/game-of-life/issues/6)
 7 | Zoom In/Out         | 4/28 - 5/9    | - <br> [Github issue here](https://github.com/hadan24/game-of-life/issues/7)
 
