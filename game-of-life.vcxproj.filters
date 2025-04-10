@@ -14,6 +14,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
+    <None Include="vcpkg_installed\vcpkg\pkgs\raylib_x64-windows\bin\raylib.dll" />
+    <None Include="vcpkg_installed\vcpkg\pkgs\raylib_x64-windows\bin\raylib.pdb" />
+    <None Include="vcpkg_installed\vcpkg\pkgs\raylib_x64-windows\debug\bin\raylib.pdb" />
+    <None Include="vcpkg_installed\vcpkg\pkgs\raylib_x64-windows\debug\bin\raylib.dll" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dep\include\imconfig.h" />
@@ -29,5 +33,9 @@
     <ClInclude Include="dep\include\rlImGui.h" />
     <ClInclude Include="dep\include\rlImGuiColors.h" />
     <ClInclude Include="src\game-of-life.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="vcpkg_installed\vcpkg\pkgs\raylib_x64-windows\lib\raylib.lib" />
+    <Library Include="vcpkg_installed\vcpkg\pkgs\raylib_x64-windows\debug\lib\raylib.lib" />
   </ItemGroup>
 </Project>

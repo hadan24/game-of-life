@@ -33,6 +33,7 @@ Number  | Goal          | Timeline      | Notes
 - toggle for differently colored cells based on cell's state
 - diff color scheme options
 - zoom in/out
+- screen wrapping toggle???
 
 #### Stretch Goals
 

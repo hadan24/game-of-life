@@ -1,0 +1,7 @@
+D:/projs/C++/game-of-life/vcpkg_installed/vcpkg/blds/nanosvg/x64-windows-rel/CMakeFiles/nanosvg.dir
+D:/projs/C++/game-of-life/vcpkg_installed/vcpkg/blds/nanosvg/x64-windows-rel/CMakeFiles/nanosvgrast.dir
+D:/projs/C++/game-of-life/vcpkg_installed/vcpkg/blds/nanosvg/x64-windows-rel/CMakeFiles/edit_cache.dir
+D:/projs/C++/game-of-life/vcpkg_installed/vcpkg/blds/nanosvg/x64-windows-rel/CMakeFiles/rebuild_cache.dir
+D:/projs/C++/game-of-life/vcpkg_installed/vcpkg/blds/nanosvg/x64-windows-rel/CMakeFiles/list_install_components.dir
+D:/projs/C++/game-of-life/vcpkg_installed/vcpkg/blds/nanosvg/x64-windows-rel/CMakeFiles/install.dir
+D:/projs/C++/game-of-life/vcpkg_installed/vcpkg/blds/nanosvg/x64-windows-rel/CMakeFiles/install/local.dir

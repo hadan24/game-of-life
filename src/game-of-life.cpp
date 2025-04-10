@@ -1,4 +1,5 @@
 #include "game-of-life.h"
+#include <chrono>
 #include <array>
 
 namespace Life
@@ -66,6 +67,8 @@ static void debugWindow(const Life::Grid& g, const Life::IntVec2& mousedCell, in
 }
 void Game()
 {
+    using namespace std::chrono;
+
     Life::IntVec2 center = {
         (Life::SCREEN_W / Life::cellSize) / 2,
         (Life::SCREEN_H / Life::cellSize) / 2 
@@ -78,6 +81,12 @@ void Game()
         {center.x + 1, center.y + 1}
     });
 
+    int ticks_per_sec = 2;
+    int tick_wait_interval = 1000 / ticks_per_sec;  // in milliseconds
+    constexpr int MAX_FRAMESKIP = 10;
+    auto next_tick_time = time_point_cast<milliseconds>(steady_clock::now())
+        .time_since_epoch()
+        .count();
     int ticks = 0;
 
     while (!WindowShouldClose())
@@ -87,7 +96,16 @@ void Game()
             static_cast<int>(GetMouseY())
         };
 
-        update(g, mouseCoords, ticks);
+        int loops = 0;
+        auto curr_time = time_point_cast<milliseconds>(steady_clock::now())
+            .time_since_epoch()
+            .count();
+        while (curr_time > next_tick_time && loops < MAX_FRAMESKIP)
+        {
+            update(g, mouseCoords, ticks);
+            next_tick_time += tick_wait_interval;
+            loops++;
+        }
 
         Life::drawBegin();
         draw(g, mouseCoords);

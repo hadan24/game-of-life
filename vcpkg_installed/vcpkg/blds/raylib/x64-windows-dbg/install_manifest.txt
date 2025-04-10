@@ -1,0 +1,8 @@
+D:/projs/C++/game-of-life/vcpkg_installed/vcpkg/pkgs/raylib_x64-windows/debug/lib/raylib.lib
+D:/projs/C++/game-of-life/vcpkg_installed/vcpkg/pkgs/raylib_x64-windows/debug/bin/raylib.dll
+D:/projs/C++/game-of-life/vcpkg_installed/vcpkg/pkgs/raylib_x64-windows/debug/include/raylib.h
+D:/projs/C++/game-of-life/vcpkg_installed/vcpkg/pkgs/raylib_x64-windows/debug/include/rlgl.h
+D:/projs/C++/game-of-life/vcpkg_installed/vcpkg/pkgs/raylib_x64-windows/debug/include/raymath.h
+D:/projs/C++/game-of-life/vcpkg_installed/vcpkg/pkgs/raylib_x64-windows/debug/lib/pkgconfig/raylib.pc
+D:/projs/C++/game-of-life/vcpkg_installed/vcpkg/pkgs/raylib_x64-windows/debug/lib/cmake/raylib/raylib-config-version.cmake
+D:/projs/C++/game-of-life/vcpkg_installed/vcpkg/pkgs/raylib_x64-windows/debug/lib/cmake/raylib/raylib-config.cmake

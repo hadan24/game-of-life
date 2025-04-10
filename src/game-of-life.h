@@ -21,7 +21,7 @@ namespace Life
     int cellToPx(int cellCoord);
     int pxToCellNum(int pxCoord);
     int pxToCellVis(int pxCoord);
-
+    
     class Grid
     {
     public:

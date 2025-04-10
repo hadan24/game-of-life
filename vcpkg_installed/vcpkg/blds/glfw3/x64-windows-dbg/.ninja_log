@@ -1,0 +1,26 @@
+# ninja log v6
+45	511	7660116603945974	src/CMakeFiles/glfw.dir/osmesa_context.c.obj	9e0c9ab49adfdd33
+29	534	7660116603827108	src/CMakeFiles/glfw.dir/platform.c.obj	ddc2254f44c22053
+32	547	7660116603847286	src/CMakeFiles/glfw.dir/vulkan.c.obj	f670ddd1ccd46f7e
+25	555	7660116603796876	src/CMakeFiles/glfw.dir/monitor.c.obj	e8346a30876dee64
+53	563	7660116604046202	src/CMakeFiles/glfw.dir/null_monitor.c.obj	354f28629dcb7431
+12	573	7660116603646391	src/CMakeFiles/glfw.dir/context.c.obj	97670c0ad9800e39
+40	581	7660116603945974	src/CMakeFiles/glfw.dir/egl_context.c.obj	30898d0e2abb6a63
+36	588	7660116603847286	src/CMakeFiles/glfw.dir/window.c.obj	edc0968402912a8
+57	595	7660116604046202	src/CMakeFiles/glfw.dir/null_window.c.obj	6a499ddfb57037bd
+21	646	7660116603746790	src/CMakeFiles/glfw.dir/input.c.obj	45092a4fd6e4df9f
+16	650	7660116603646391	src/CMakeFiles/glfw.dir/init.c.obj	10594b662fbc905
+62	677	7660116604147691	src/CMakeFiles/glfw.dir/null_joystick.c.obj	d95aa91def5ff948
+49	682	7660116603945974	src/CMakeFiles/glfw.dir/null_init.c.obj	892315a8be1a62ea
+597	767	7660116609495488	src/CMakeFiles/glfw.dir/glfw.rc.res	b172cac1256c176e
+522	1054	7660116608745613	src/CMakeFiles/glfw.dir/win32_module.c.obj	92bac007ddf38416
+547	1062	7660116608997619	src/CMakeFiles/glfw.dir/win32_thread.c.obj	2f37cf16343dfb99
+535	1066	7660116608897283	src/CMakeFiles/glfw.dir/win32_time.c.obj	3684bd6659928896
+588	1079	7660116609394918	src/CMakeFiles/glfw.dir/wgl_context.c.obj	caa2d29de181dc9c
+555	1083	7660116609098471	src/CMakeFiles/glfw.dir/win32_init.c.obj	4737dfada29ccce6
+581	1097	7660116609344840	src/CMakeFiles/glfw.dir/win32_window.c.obj	9dcec3dc2c8a23f
+564	1108	7660116609148755	src/CMakeFiles/glfw.dir/win32_joystick.c.obj	6040b590850bd1bb
+573	1118	7660116609249484	src/CMakeFiles/glfw.dir/win32_monitor.c.obj	9b8a3df2432e2e86
+1118	2183	7660116624648257	src/glfw3.dll	aaa19c7c5ca2b55d
+1118	2183	7660116624648257	src/glfw3dll.lib	aaa19c7c5ca2b55d
+2183	2325	7660116625352929	CMakeFiles/install.util	7402cb7a0645d085
