@@ -50,5 +50,5 @@ namespace Life
 }
 
 void Game();
-void update(Life::Grid& g, const Life::IntVec2& mouse, int& ticks);
+void update(Life::Grid& g, const Life::IntVec2& mouse, int& ticks, bool& paused);
 void draw(const Life::Grid& g, const Life::IntVec2& mouse);
