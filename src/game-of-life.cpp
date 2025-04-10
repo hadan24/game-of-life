@@ -63,6 +63,8 @@ static void debugWindow(const Life::Grid& g, const Life::IntVec2& mousedCell, in
     Text("num neighbors: %d", g.neighbors(cellX, cellY));
     NewLine();
     Text("ticks passed: %d", ticks);
+    NewLine();
+    Text("paused?: %d", g.paused());
     End();
 }
 void Game()
@@ -87,7 +89,6 @@ void Game()
     auto next_tick_time = time_point_cast<milliseconds>(steady_clock::now())
         .time_since_epoch()
         .count();
-    bool sim_paused = true;
     int ticks = 0;
 
     while (!WindowShouldClose())
@@ -96,7 +97,7 @@ void Game()
             static_cast<int>(GetMouseX()),
             static_cast<int>(GetMouseY())
         };
-        update(g, mouseCoords, ticks, sim_paused);
+        update(g, mouseCoords, ticks);
 
         int loops = 0;
         auto curr_time = time_point_cast<milliseconds>(steady_clock::now())
@@ -104,8 +105,10 @@ void Game()
             .count();
         while (curr_time > next_tick_time && loops < MAX_FRAMESKIP)
         {
-            if (!sim_paused)
-                g.advanceTicks();
+            if (!g.paused()) {
+                g.advanceTick();
+                ticks++;
+            }
             next_tick_time += tick_wait_interval;
             loops++;
         }
@@ -117,7 +120,7 @@ void Game()
     }
 }
 
-void update(Life::Grid& g, const Life::IntVec2& mouse, int& ticks, bool& paused)
+void update(Life::Grid& g, const Life::IntVec2& mouse, int& ticks)
 {
     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !ImGui::GetIO().WantCaptureMouse)
         g.spawnCell(Life::pxToCellNum(mouse.x), Life::pxToCellNum(mouse.y));
@@ -126,10 +129,10 @@ void update(Life::Grid& g, const Life::IntVec2& mouse, int& ticks, bool& paused)
     if (IsKeyPressed(KEY_ENTER))
     {
         ticks++;
-        g.advanceTicks();
+        g.advanceTick();
     }
     if (IsKeyPressed(KEY_SPACE))
-        paused = !paused;
+        g.togglePause();
 }
 
 void draw(const Life::Grid& g, const Life::IntVec2& mouse)

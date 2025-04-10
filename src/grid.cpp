@@ -9,7 +9,7 @@ static std::array<Life::IntVec2, 8> dirs(
 
 Life::Grid::Grid() :
     m_data( std::move(std::vector<char>(width*height, CellState::DEAD)) ),
-    m_neighbors ( std::move(std::vector<char>(width*height, 0)) )
+    m_neighbors( std::move(std::vector<char>(width*height, 0)) )
 {}
 
 Life::Grid::Grid(std::vector<IntVec2> live) :
@@ -63,7 +63,7 @@ void Life::Grid::killCell(int x, int y)
         m_neighbors[cell + d.x + d.y * width]--;
 }
 
-void Life::Grid::advTick()
+void Life::Grid::advanceTick()
 {
     for (int i = 0; i < m_neighbors.size(); i++) {
         if (m_neighbors[i] == 3 || (m_data[i] == CellState::ALIVE && m_neighbors[i] == 2))
@@ -75,20 +75,24 @@ void Life::Grid::advTick()
         m_neighbors[i] = 0;
 
         for (auto& d : dirs) {
-            bool atYEdge = (i + d.y*width < 0) || (i + d.y*width >= m_data.size());
-            bool atXEdge = (i%width == 0 && d.x == -1) || (i%width == width-1 && d.x == 1);
+            bool atYEdge = (i + d.y * width < 0) || (i + d.y * width >= m_data.size());
+            bool atXEdge = (i % width == 0 && d.x == -1) || (i % width == width - 1 && d.x == 1);
             if (atYEdge || atXEdge)
                 continue;
-            else if (m_data[i+d.x + d.y*width] == CellState::ALIVE)
+            else if (m_data[i + d.x + d.y * width] == CellState::ALIVE)
                 m_neighbors[i]++;
         }
     }
 }
 
-void Life::Grid::advanceTicks(int numTicks)     // defaults to 1
+void Life::Grid::togglePause()
 {
-    for (int i = 0; i < numTicks; i++)
-        advTick();
+    m_paused = !m_paused;
+}
+
+bool Life::Grid::paused() const
+{
+    return m_paused;
 }
 
 

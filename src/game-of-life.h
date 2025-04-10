@@ -35,20 +35,23 @@ namespace Life
         void flipCell(int x, int y);
         void spawnCell(int x, int y);
         void killCell(int x, int y);
-        void advanceTicks(int numTicks = 1);
+        void advanceTick();
+
+        void togglePause();
+        bool paused() const;
 
         int neighbors(int x, int y) const;  // for debugging
 
     private:
         std::vector<char> m_data;
         std::vector<char> m_neighbors;
+        bool m_paused = true;
 
         enum CellState { ALIVE, DEAD };
-        void advTick(); // helper
     };
     void drawGrid(const Grid& grid);
 }
 
 void Game();
-void update(Life::Grid& g, const Life::IntVec2& mouse, int& ticks, bool& paused);
+void update(Life::Grid& g, const Life::IntVec2& mouse, int& ticks);
 void draw(const Life::Grid& g, const Life::IntVec2& mouse);
