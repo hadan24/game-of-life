@@ -27,114 +27,113 @@ namespace Life
         CloseWindow();
     }
 
-    void drawGrid(const Grid& grid)
-    {
-        for (int i = 0; i < grid.width; i++)
-            for (int j = 0; j < grid.height; j++)
-                if (grid.isAlive(i, j))
-                    DrawRectangle(cellToPx(i), cellToPx(j), cellSize, cellSize, BLUE);
-
-        for (int i = 0; i < SCREEN_W; i++)
-            DrawLine(cellToPx(i), 0, cellToPx(i), SCREEN_H, DARKGRAY);
-        for (int j = 0; j < SCREEN_H; j++)
-            DrawLine(0, cellToPx(j), SCREEN_W, cellToPx(j), DARKGRAY);
-    }
-
     int cellToPx(int cellCoord) { return cellCoord * cellSize; }
     int pxToCellNum(int pxCoord) { return pxCoord / cellSize; }
     int pxToCellVis(int pxCoord) {
         return static_cast<int>(pxCoord / cellSize) * cellSize;
     }
-}
 
 
-static void debugWindow(const Life::Grid& g, const Life::IntVec2& mousedCell) {
-    using namespace ImGui;
+    static void debugWindow(const Life::Grid& g, const Life::IntVec2& mousedCell) {
+        using namespace ImGui;
 
-    int cellX = Life::pxToCellNum(mousedCell.x), cellY = Life::pxToCellNum(mousedCell.y);
-    Begin("first gui window", NULL);
-    Text("hallo from ImGui :D");
-    NewLine();
-    Text("grid width: %d", Life::SCREEN_W / Life::cellSize);
-    Text("grid height: %d", Life::SCREEN_H / Life::cellSize);
-    NewLine();
-    Text("mouse x: %d (%d)", cellX, mousedCell.x);
-    Text("mouse y: %d (%d)", cellY, mousedCell.y);
-    End();
-}
-void Game()
-{
-    using namespace std::chrono;
-
-    Life::IntVec2 center = {
-        (Life::SCREEN_W / Life::cellSize) / 2,
-        (Life::SCREEN_H / Life::cellSize) / 2 
-    };
-    Life::Grid g({
-        {center.x,      center.y},
-        {center.x,      center.y - 1},
-        {center.x - 1,  center.y},
-        {center.x,      center.y + 1},
-        {center.x + 1,  center.y + 1}
-    });
-
-    int ticks_per_sec = 2;
-    int tick_wait_interval = 1000 / ticks_per_sec;  // in milliseconds
-    constexpr int MAX_FRAMESKIP = 10;
-    auto next_tick_time = time_point_cast<milliseconds>(steady_clock::now())
-        .time_since_epoch()
-        .count();
-
-    while (!WindowShouldClose())
+        int cellX = Life::pxToCellNum(mousedCell.x), cellY = Life::pxToCellNum(mousedCell.y);
+        Begin("first gui window", NULL);
+        Text("hallo from ImGui :D");
+        NewLine();
+        Text("grid width: %d", Life::SCREEN_W / Life::cellSize);
+        Text("grid height: %d", Life::SCREEN_H / Life::cellSize);
+        NewLine();
+        Text("mouse x: %d (%d)", cellX, mousedCell.x);
+        Text("mouse y: %d (%d)", cellY, mousedCell.y);
+        End();
+    }
+    void Game()
     {
-        Life::IntVec2 mouseCoords = {
-            static_cast<int>(GetMouseX()),
-            static_cast<int>(GetMouseY())
+        Life::IntVec2 center = {
+            (Life::SCREEN_W / Life::cellSize) / 2,
+            (Life::SCREEN_H / Life::cellSize) / 2 
         };
-        update(g, mouseCoords);
+        Life::Grid g({
+            {center.x,      center.y},
+            {center.x,      center.y - 1},
+            {center.x - 1,  center.y},
+            {center.x,      center.y + 1},
+            {center.x + 1,  center.y + 1}
+        });
 
+        using namespace std::chrono;
+        Life::UIData ui;
+        Life::TimingData t = {
+            ui.ticksPerSec,
+            time_point_cast<milliseconds>(steady_clock::now())
+                .time_since_epoch()
+                .count()
+        };
+
+        while (!WindowShouldClose())
+        {
+            ui.mouse = {
+                static_cast<int>(GetMouseX()),
+                static_cast<int>(GetMouseY())
+            };
+            update(g, ui, t);
+
+
+            Life::drawBegin();
+            draw(g, ui.mouse);
+            debugWindow(g, ui.mouse);
+            Life::drawEnd();
+        }
+    }
+
+    void update(Life::Grid& g, const Life::UIData& ui, TimingData& t)
+    {
+        using Life::pxToCellNum;
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !ImGui::GetIO().WantCaptureMouse)
+            g.spawnCell( pxToCellNum(ui.mouse.x), pxToCellNum(ui.mouse.y) );
+        if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
+            g.killCell( pxToCellNum(ui.mouse.x), pxToCellNum(ui.mouse.y) );
+        if (IsKeyPressed(KEY_ENTER))
+            g.advanceTick();
+        if (IsKeyPressed(KEY_SPACE))
+            g.togglePause();
+
+
+        int tickWaitInterval = 1000 / t.ticksPerSec;  // in milliseconds
+        constexpr int MAX_FRAMESKIP = 10;
         int loops = 0;
-        auto curr_time = time_point_cast<milliseconds>(steady_clock::now())
+
+        using namespace std::chrono;
+        auto currTime = time_point_cast<milliseconds>(steady_clock::now())
             .time_since_epoch()
             .count();
-        while (curr_time > next_tick_time && loops < MAX_FRAMESKIP)
+        while (currTime > t.nextTickTime && loops < MAX_FRAMESKIP)
         {
             if (!g.paused())
                 g.advanceTick();
-            next_tick_time += tick_wait_interval;
+            t.nextTickTime += tickWaitInterval;
             loops++;
         }
-
-        Life::drawBegin();
-        draw(g, mouseCoords);
-        debugWindow(g, mouseCoords);
-        Life::drawEnd();
     }
-}
+    void draw(const Life::Grid& g, const Life::IntVec2& mouse)
+    {
+        // Draw live cells
+        for (int i = 0; i < g.width; i++)
+            for (int j = 0; j < g.height; j++)
+                if (g.isAlive(i, j))
+                    DrawRectangle(cellToPx(i), cellToPx(j), cellSize, cellSize, BLUE);
 
-/*
-    to move inside:
-    - MAX_FRAMESKIP
-    - int loops, curr_time, inner while loop
-    - create timing data struct??
-*/
-void update(Life::Grid& g, const Life::IntVec2& mouse)
-{
-    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !ImGui::GetIO().WantCaptureMouse)
-        g.spawnCell(Life::pxToCellNum(mouse.x), Life::pxToCellNum(mouse.y));
-    if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
-        g.killCell(Life::pxToCellNum(mouse.x), Life::pxToCellNum(mouse.y));
-    if (IsKeyPressed(KEY_ENTER))
-        g.advanceTick();
-    if (IsKeyPressed(KEY_SPACE))
-        g.togglePause();
-}
+        // Draw grid lines
+        for (int i = 0; i < SCREEN_W; i++)
+            DrawLine(cellToPx(i), 0, cellToPx(i), SCREEN_H, DARKGRAY);
+        for (int j = 0; j < SCREEN_H; j++)
+            DrawLine(0, cellToPx(j), SCREEN_W, cellToPx(j), DARKGRAY);
 
-void draw(const Life::Grid& g, const Life::IntVec2& mouse)
-{
-    Life::drawGrid(g);
-    DrawRectangle(
-        Life::pxToCellVis(mouse.x), Life::pxToCellVis(mouse.y),
-        Life::cellSize, Life::cellSize, DARKBLUE
-    );
+        // Highlight moused cell
+        DrawRectangle(
+            Life::pxToCellVis(mouse.x), Life::pxToCellVis(mouse.y),
+            Life::cellSize, Life::cellSize, DARKBLUE
+        );
+    }
 }

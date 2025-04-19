@@ -12,6 +12,16 @@ namespace Life
     inline int cellSize = 20;
 
     struct IntVec2 { int x, y; };
+    struct UIData {
+        int ticksPerSec = 2;
+        IntVec2 mouse;
+        bool paused = true;
+        bool showDetailedCellState = false;
+    };
+    struct TimingData {
+        int ticksPerSec;
+        long long nextTickTime;
+    };
 
     void gameSetup();
     void drawBegin();
@@ -48,8 +58,8 @@ namespace Life
         enum CellState { ALIVE, DEAD };
     };
     void drawGrid(const Grid& grid);
-}
 
-void Game();
-void update(Life::Grid& g, const Life::IntVec2& mouse);
-void draw(const Life::Grid& g, const Life::IntVec2& mouse);
+    void Game();
+    void update(Life::Grid& g, const Life::IntVec2& mouse, TimingData& t);
+    void draw(const Life::Grid& g, const Life::IntVec2& mouse);
+}

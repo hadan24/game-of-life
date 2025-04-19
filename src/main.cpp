@@ -4,7 +4,7 @@ int main()
 {
     Life::gameSetup();
 
-    Game();
+    Life::Game();
 
     Life::gameTeardown();
 }
