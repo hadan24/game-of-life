@@ -12,16 +12,6 @@ namespace Life
     inline int cellSize = 20;
 
     struct IntVec2 { int x, y; };
-    struct UIData {
-        int ticksPerSec = 2;
-        IntVec2 mouse;
-        bool paused = true;
-        bool showDetailedCellState = false;
-    };
-    struct TimingData {
-        int ticksPerSec;
-        long long nextTickTime;
-    };
 
     void gameSetup();
     void drawBegin();
@@ -47,19 +37,21 @@ namespace Life
         void killCell(int x, int y);
         void advanceTick();
 
-        void togglePause();
-        bool paused() const;
-
     private:
         std::vector<char> m_data;
         std::vector<char> m_neighbors;
-        bool m_paused = true;
 
         enum CellState { ALIVE, DEAD };
     };
-    void drawGrid(const Grid& grid);
 
+    struct UIData {
+        int ticksPerSec = 2;
+        IntVec2 mouse = {0, 0};
+        bool paused = true;
+        bool showDetailedCellState = false;
+    };
     void Game();
-    void update(Life::Grid& g, const Life::IntVec2& mouse, TimingData& t);
+    void update(Life::Grid& g, Life::UIData& ui, long long& nextTickTime);
     void draw(const Life::Grid& g, const Life::IntVec2& mouse);
+    void uiWindow(Life::Grid& g, Life::UIData& ui);
 }

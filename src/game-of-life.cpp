@@ -34,20 +34,6 @@ namespace Life
     }
 
 
-    static void debugWindow(const Life::Grid& g, const Life::IntVec2& mousedCell) {
-        using namespace ImGui;
-
-        int cellX = Life::pxToCellNum(mousedCell.x), cellY = Life::pxToCellNum(mousedCell.y);
-        Begin("first gui window", NULL);
-        Text("hallo from ImGui :D");
-        NewLine();
-        Text("grid width: %d", Life::SCREEN_W / Life::cellSize);
-        Text("grid height: %d", Life::SCREEN_H / Life::cellSize);
-        NewLine();
-        Text("mouse x: %d (%d)", cellX, mousedCell.x);
-        Text("mouse y: %d (%d)", cellY, mousedCell.y);
-        End();
-    }
     void Game()
     {
         Life::IntVec2 center = {
@@ -64,12 +50,9 @@ namespace Life
 
         using namespace std::chrono;
         Life::UIData ui;
-        Life::TimingData t = {
-            ui.ticksPerSec,
-            time_point_cast<milliseconds>(steady_clock::now())
-                .time_since_epoch()
-                .count()
-        };
+        long long nextTickTime = time_point_cast<milliseconds>(steady_clock::now())
+            .time_since_epoch()
+            .count();
 
         while (!WindowShouldClose())
         {
@@ -77,30 +60,35 @@ namespace Life
                 static_cast<int>(GetMouseX()),
                 static_cast<int>(GetMouseY())
             };
-            update(g, ui, t);
+            update(g, ui, nextTickTime);
 
 
             Life::drawBegin();
             draw(g, ui.mouse);
-            debugWindow(g, ui.mouse);
+            uiWindow(g, ui);
             Life::drawEnd();
         }
     }
 
-    void update(Life::Grid& g, const Life::UIData& ui, TimingData& t)
+    void update(Life::Grid& g, Life::UIData& uiData, long long& nextTickTime)
     {
         using Life::pxToCellNum;
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !ImGui::GetIO().WantCaptureMouse)
-            g.spawnCell( pxToCellNum(ui.mouse.x), pxToCellNum(ui.mouse.y) );
+            g.spawnCell(pxToCellNum(uiData.mouse.x), pxToCellNum(uiData.mouse.y));
         if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
-            g.killCell( pxToCellNum(ui.mouse.x), pxToCellNum(ui.mouse.y) );
-        if (IsKeyPressed(KEY_ENTER))
+            g.killCell(pxToCellNum(uiData.mouse.x), pxToCellNum(uiData.mouse.y));
+        if (
+            (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT)) &&
+            IsKeyDown(KEY_ENTER)
+        )
+            g.advanceTick();
+        else if (IsKeyPressed(KEY_ENTER))
             g.advanceTick();
         if (IsKeyPressed(KEY_SPACE))
-            g.togglePause();
+            uiData.paused = !uiData.paused;
 
 
-        int tickWaitInterval = 1000 / t.ticksPerSec;  // in milliseconds
+        int tickWaitInterval = 1000 / uiData.ticksPerSec;  // in milliseconds
         constexpr int MAX_FRAMESKIP = 10;
         int loops = 0;
 
@@ -108,11 +96,11 @@ namespace Life
         auto currTime = time_point_cast<milliseconds>(steady_clock::now())
             .time_since_epoch()
             .count();
-        while (currTime > t.nextTickTime && loops < MAX_FRAMESKIP)
+        while (currTime > nextTickTime && loops < MAX_FRAMESKIP)
         {
-            if (!g.paused())
+            if (!uiData.paused)
                 g.advanceTick();
-            t.nextTickTime += tickWaitInterval;
+            nextTickTime += tickWaitInterval;
             loops++;
         }
     }
@@ -135,5 +123,33 @@ namespace Life
             Life::pxToCellVis(mouse.x), Life::pxToCellVis(mouse.y),
             Life::cellSize, Life::cellSize, DARKBLUE
         );
+    }
+    void uiWindow(Life::Grid& g, Life::UIData& ui) {
+        using namespace ImGui;
+
+        int cellX = Life::pxToCellNum(ui.mouse.x);
+        int cellY = Life::pxToCellNum(ui.mouse.y);
+        Begin("Simulation Controls/Settings", NULL);
+
+        Text("FPS: %d", static_cast<int>(ImGui::GetIO().Framerate));
+        NewLine();
+
+        SliderInt("Sim Speed", &(ui.ticksPerSec), 1, 10, "%d");
+        if ( Button("Pause/Play") )
+            ui.paused = !ui.paused;
+        SameLine(); Text(ui.paused ? "Paused" : "Playing");
+        if ( Button("Next Tick") )
+            g.advanceTick();
+        NewLine();
+
+        if ( Button("Show Detailed Cell States"))
+            ui.showDetailedCellState = !ui.showDetailedCellState;
+        SameLine();
+        Text(ui.showDetailedCellState ? "On" : "Off");
+        NewLine();
+
+        Text("mouse x: %d (%d)", cellX, ui.mouse.x);
+        Text("mouse y: %d (%d)", cellY, ui.mouse.y);
+        End();
     }
 }

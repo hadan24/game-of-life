@@ -84,13 +84,3 @@ void Life::Grid::advanceTick()
         }
     }
 }
-
-void Life::Grid::togglePause()
-{
-    m_paused = !m_paused;
-}
-
-bool Life::Grid::paused() const
-{
-    return m_paused;
-}
