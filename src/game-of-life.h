@@ -25,8 +25,8 @@ namespace Life
     class Grid
     {
     public:
-        const int m_width = SCREEN_W / cellSize;
-        const int m_height = SCREEN_H / cellSize;
+        const int m_width = SCREEN_W / cellSize + 1;
+        const int m_height = SCREEN_H / cellSize + 1;
 
         Grid();
         Grid(std::vector<IntVec2> live);
