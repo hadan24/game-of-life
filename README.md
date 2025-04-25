@@ -29,9 +29,6 @@ Number  | Goal          | Timeline      | Notes
 7 | Zoom In/Out         | 4/28 - 5/9    | - <br> [Github issue here](https://github.com/hadan24/game-of-life/issues/7)
 
 #### UI Components
-- simulation speed slider
-- toggle for differently colored cells based on cell's state
-- diff color scheme options
 - zoom in/out
 - screen wrapping toggle???
 

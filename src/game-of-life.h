@@ -25,8 +25,8 @@ namespace Life
     class Grid
     {
     public:
-        const int width = SCREEN_W / cellSize;
-        const int height = SCREEN_H / cellSize;
+        const int m_width = SCREEN_W / cellSize;
+        const int m_height = SCREEN_H / cellSize;
 
         Grid();
         Grid(std::vector<IntVec2> live);
@@ -36,6 +36,7 @@ namespace Life
         void spawnCell(int x, int y);
         void killCell(int x, int y);
         void advanceTick();
+        int  neighbors(int i, int y) const;
 
     private:
         std::vector<char> m_data;
@@ -52,6 +53,6 @@ namespace Life
     };
     void Game();
     void update(Life::Grid& g, Life::UIData& ui, long long& nextTickTime);
-    void draw(const Life::Grid& g, const Life::IntVec2& mouse);
+    void draw(const Life::Grid& g, const Life::UIData& options);
     void uiWindow(Life::Grid& g, Life::UIData& ui);
 }

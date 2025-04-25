@@ -60,12 +60,12 @@ namespace Life
                 static_cast<int>(GetMouseX()),
                 static_cast<int>(GetMouseY())
             };
-            update(g, ui, nextTickTime);
+            Life::update(g, ui, nextTickTime);
 
 
             Life::drawBegin();
-            draw(g, ui.mouse);
-            uiWindow(g, ui);
+            Life::draw(g, ui);
+            Life::uiWindow(g, ui);
             Life::drawEnd();
         }
     }
@@ -77,6 +77,9 @@ namespace Life
             g.spawnCell(pxToCellNum(uiData.mouse.x), pxToCellNum(uiData.mouse.y));
         if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
             g.killCell(pxToCellNum(uiData.mouse.x), pxToCellNum(uiData.mouse.y));
+        if (IsKeyPressed(KEY_SPACE))
+            uiData.paused = !uiData.paused;
+
         if (
             (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT)) &&
             IsKeyDown(KEY_ENTER)
@@ -84,8 +87,6 @@ namespace Life
             g.advanceTick();
         else if (IsKeyPressed(KEY_ENTER))
             g.advanceTick();
-        if (IsKeyPressed(KEY_SPACE))
-            uiData.paused = !uiData.paused;
 
 
         int tickWaitInterval = 1000 / uiData.ticksPerSec;  // in milliseconds
@@ -104,24 +105,52 @@ namespace Life
             loops++;
         }
     }
-    void draw(const Life::Grid& g, const Life::IntVec2& mouse)
+    void draw(const Life::Grid& g, const Life::UIData& options)
     {
-        // Draw live cells
-        for (int i = 0; i < g.width; i++)
-            for (int j = 0; j < g.height; j++)
-                if (g.isAlive(i, j))
-                    DrawRectangle(cellToPx(i), cellToPx(j), cellSize, cellSize, BLUE);
+        // Draw cells
+        if (options.showDetailedCellState)
+        {
+            for (int i = 0; i < g.m_width; i++)
+            {
+                for (int j = 0; j < g.m_height; j++)
+                {
+                    int n = g.neighbors(i, j);
+                    if (g.isAlive(i, j))
+                        DrawRectangle(
+                            Life::cellToPx(i), Life::cellToPx(j),
+                            Life::cellSize, Life::cellSize,
+                            n < 2 || n > 3 ? DARKBLUE : BLUE    // will die : stay alive
+                        );
+                    else if (n == 3)    // not alive but will come alive
+                        DrawRectangle(
+                            Life::cellToPx(i), Life::cellToPx(j),
+                            Life::cellSize, Life::cellSize, SKYBLUE
+                        );
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < g.m_width; i++)
+                for (int j = 0; j < g.m_height; j++)
+                    if (g.isAlive(i, j))
+                        DrawRectangle(
+                            Life::cellToPx(i), Life::cellToPx(j),
+                            Life::cellSize, Life::cellSize, BLUE
+                        );
+        }
 
         // Draw grid lines
-        for (int i = 0; i < SCREEN_W; i++)
-            DrawLine(cellToPx(i), 0, cellToPx(i), SCREEN_H, DARKGRAY);
-        for (int j = 0; j < SCREEN_H; j++)
-            DrawLine(0, cellToPx(j), SCREEN_W, cellToPx(j), DARKGRAY);
+        for (int i = 0; i < Life::SCREEN_W; i++)
+            DrawLine(Life::cellToPx(i), 0, Life::cellToPx(i), Life::SCREEN_H, DARKGRAY);
+        for (int j = 0; j < Life::SCREEN_H; j++)
+            DrawLine(0, Life::cellToPx(j), Life::SCREEN_W, Life::cellToPx(j), DARKGRAY);
 
         // Highlight moused cell
         DrawRectangle(
-            Life::pxToCellVis(mouse.x), Life::pxToCellVis(mouse.y),
-            Life::cellSize, Life::cellSize, DARKBLUE
+            Life::pxToCellVis(options.mouse.x),
+            Life::pxToCellVis(options.mouse.y),
+            Life::cellSize, Life::cellSize, LIGHTGRAY
         );
     }
     void uiWindow(Life::Grid& g, Life::UIData& ui) {
@@ -150,6 +179,7 @@ namespace Life
 
         Text("mouse x: %d (%d)", cellX, ui.mouse.x);
         Text("mouse y: %d (%d)", cellY, ui.mouse.y);
+        Text("neighbors: %d", g.neighbors(cellX, cellY));
         End();
     }
 }
