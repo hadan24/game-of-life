@@ -36,13 +36,14 @@ namespace Life
         void spawnCell(int x, int y);
         void killCell(int x, int y);
         void advanceTick();
-        int  neighbors(int i, int y) const;
+        int  neighbors(int x, int y) const;
 
     private:
         std::vector<char> m_data;
         std::vector<char> m_neighbors;
 
-        enum CellState { ALIVE, DEAD };
+        enum CellState { DEAD, ALIVE };
+        bool inBounds(int x, int y) const;
     };
 
     struct UIData {

@@ -2,7 +2,7 @@
 #include <array>
 
 // up, up-right, right, down-right, down, etc
-static std::array<Life::IntVec2, 8> dirs(
+static const std::array<Life::IntVec2, 8> dirs(
     { {0,-1}, {1,-1}, {1,0}, {1,1}, {0,1}, {-1,1}, {-1,0}, {-1,-1} }
 );
 
@@ -26,19 +26,9 @@ bool Life::Grid::isAlive(int x, int y) const {
 
 void Life::Grid::flipCell(int x, int y)
 {
-    int cell = x + y*m_width;
-    if (m_data[cell] == CellState::ALIVE)
-    {
-        m_data[cell] = CellState::DEAD;
-        for (auto& d : dirs)
-            m_neighbors[cell+d.x + d.y*m_width]--;
-    }
-    else
-    {
-        m_data[cell] = CellState::ALIVE;
-        for (auto& d : dirs)
-            m_neighbors[cell+d.x + d.y*m_width]++;
-    }
+    if (m_data[x + y*m_width] == CellState::ALIVE)
+        killCell(x, y);
+    else spawnCell(x, y);
 }
 
 void Life::Grid::spawnCell(int x, int y)
@@ -49,7 +39,10 @@ void Life::Grid::spawnCell(int x, int y)
 
     m_data[cell] = CellState::ALIVE;
     for (auto& d : dirs)
-        m_neighbors[cell + d.x + d.y * m_width]++;
+    {
+        if (inBounds(x+d.x, y+d.y))
+            m_neighbors[cell + d.x + d.y*m_width]++;
+    }
 }
 
 void Life::Grid::killCell(int x, int y)
@@ -60,27 +53,36 @@ void Life::Grid::killCell(int x, int y)
 
     m_data[cell] = CellState::DEAD;
     for (auto& d : dirs)
-        m_neighbors[cell + d.x + d.y * m_width]--;
+    {
+        if (inBounds(x + d.x, y + d.y))
+            m_neighbors[cell + d.x + d.y*m_width]--;
+    }
 }
 
 void Life::Grid::advanceTick()
 {
-    for (int i = 0; i < m_neighbors.size(); i++) {
+    for (int i = 0; i < m_neighbors.size(); i++)
+    {
         if (m_neighbors[i] == 3 || (m_data[i] == CellState::ALIVE && m_neighbors[i] == 2))
             m_data[i] = CellState::ALIVE;
         else m_data[i] = CellState::DEAD;
     }
 
-    for (int i = 0; i < m_data.size(); i++) {
-        m_neighbors[i] = 0;
+    for (int y = 0; y < m_height; y++)
+    {
+        int col = y*m_width;
+        for (int x = 0; x < m_width; x++)
+        {
+            m_neighbors[x + col] = 0;
 
-        for (auto& d : dirs) {
-            bool atYEdge = (i + d.y * m_width < 0) || (i + d.y * m_width >= m_data.size());
-            bool atXEdge = (i % m_width == 0 && d.x == -1) || (i % m_width == m_width - 1 && d.x == 1);
-            if (atYEdge || atXEdge)
-                continue;
-            else if (m_data[i + d.x + d.y * m_width] == CellState::ALIVE)
-                m_neighbors[i]++;
+            for (auto& d : dirs)
+            {
+                if (
+                    inBounds(x+d.x, y+d.y) &&
+                    m_data[x+d.x + (y+d.y)*m_width] == CellState::ALIVE
+                )
+                    m_neighbors[x + col]++;
+            }
         }
     }
 }
@@ -88,4 +90,9 @@ void Life::Grid::advanceTick()
 int Life::Grid::neighbors(int x, int y) const
 {
     return m_neighbors[x + y*m_width];
+}
+
+bool Life::Grid::inBounds(int x, int y) const
+{
+    return x >= 0 && x < m_width && y >= 0 && y < m_height;
 }
