@@ -26,11 +26,8 @@ Number  | Goal          | Timeline      | Notes
 4 | Toggle-able Cells   | 3/24 - 3/28   | - done 3/29 <br> [Github issue here](https://github.com/hadan24/game-of-life/issues/5)
 5 | Tick vs Frame Rate  | 3/31 - 4/11   | - done 4/10 <br> [Github issue here](https://github.com/hadan24/game-of-life/issues/3)
 6 | Create UI           | 4/14 - 4/25   | - done 4/28 (technically 4/27, got a UI w/ original intended features working, was hoping to add screen wrapping but no time, it'll be new feature)<br> [Github issue here](https://github.com/hadan24/game-of-life/issues/6)
-7 | Zoom In/Out         | 4/28 - 5/9    | - <br> [Github issue here](https://github.com/hadan24/game-of-life/issues/7)
-
-#### UI Components
-- zoom in/out
-- screen wrapping toggle???
+7 | Screen Wrapping     | 4/28 - 5/2    | - <br> [Github issue here](https://github.com/hadan24/game-of-life/issues/11)
+8 | Zoom In/Out         | 5/5 - 5/16    | - <br> [Github issue here](https://github.com/hadan24/game-of-life/issues/7)
 
 #### Stretch Goals
 
