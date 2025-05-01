@@ -25,8 +25,8 @@ namespace Life
     class Grid
     {
     public:
-        const int m_width = SCREEN_W / cellSize + 1;
-        const int m_height = SCREEN_H / cellSize + 1;
+        const int m_width = SCREEN_W / cellSize ;
+        const int m_height = SCREEN_H / cellSize ;
 
         Grid();
         Grid(std::vector<IntVec2> live);
@@ -37,13 +37,19 @@ namespace Life
         void killCell(int x, int y);
         void advanceTick();
         int  neighbors(int x, int y) const;
+        
+        void setEdgeWrap(bool val);
 
     private:
         std::vector<char> m_data;
         std::vector<char> m_neighbors;
 
+        bool edgeWrap = false;
+
         enum CellState { DEAD, ALIVE };
         bool inBounds(int x, int y) const;
+        int wrapX(int x) const;
+        int wrapY(int y) const;
     };
 
     struct UIData {
@@ -51,6 +57,7 @@ namespace Life
         IntVec2 mouse = {0, 0};
         bool paused = true;
         bool showDetailedCellState = false;
+        bool screenWrap = false;
     };
     void Game();
     void update(Life::Grid& g, Life::UIData& ui, long long& nextTickTime);

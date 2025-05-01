@@ -175,6 +175,14 @@ namespace Life
             ui.showDetailedCellState = !ui.showDetailedCellState;
         SameLine();
         Text(ui.showDetailedCellState ? "On" : "Off");
+
+        if (Button("Toggle Screen Wrapping"))
+        {
+            ui.screenWrap = !ui.screenWrap;
+            g.setEdgeWrap(ui.screenWrap);
+        }
+        SameLine();
+        Text(ui.screenWrap ? "On" : "Off");
         NewLine();
 
         Text("mouse x: %d (%d)", cellX, ui.mouse.x);
