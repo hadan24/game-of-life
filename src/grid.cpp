@@ -113,6 +113,32 @@ int Life::Grid::neighbors(int x, int y) const
 void Life::Grid::setEdgeWrap(bool val)
 {
     edgeWrap = val;
+
+    int lastRow = (m_height - 1) * m_width;
+    for (int x = 0; x < m_width; x++)
+    {
+        for (int dx : {-1, 0, 1})
+        {
+            int currNeighborX = wrapX(x + dx);
+            if (m_data[currNeighborX + lastRow] == CellState::ALIVE)
+                m_neighbors[x] += edgeWrap ? 1 : -1;    // top row, check last
+            if (m_data[currNeighborX] == CellState::ALIVE)
+                m_neighbors[x + lastRow] += edgeWrap ? 1 : -1;  // bot, check top
+        }
+    }
+    int lastCol = m_width - 1;
+    for (int y = 0; y < m_height; y++)
+    {
+        int currY = y * m_width;
+        for (int dy : {-1, 0, 1})
+        {
+            int currNeighborY = wrapY(y+dy) * m_width;
+            if (m_data[lastCol + currNeighborY] == CellState::ALIVE)
+                m_neighbors[currY] += edgeWrap ? 1 : -1;    // left col, check right
+            if (m_data[currNeighborY] == CellState::ALIVE)
+                m_neighbors[lastCol + currY] += edgeWrap ? 1 : -1;  // right, check left
+        }
+    }
 }
 
 
