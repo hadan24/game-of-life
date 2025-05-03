@@ -185,8 +185,8 @@ namespace Life
         Text(ui.screenWrap ? "On" : "Off");
         NewLine();
 
-        Text("mouse x: %d (%d)", cellX, ui.mouse.x);
-        Text("mouse y: %d (%d)", cellY, ui.mouse.y);
+        Text("mouse x: %d (%d)", std::min(cellX, g.m_width-1), ui.mouse.x);
+        Text("mouse y: %d (%d)", std::min(cellY, g.m_height-1), ui.mouse.y);
         Text("neighbors: %d", g.neighbors(cellX, cellY));
         End();
     }

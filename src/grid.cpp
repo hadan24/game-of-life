@@ -20,12 +20,17 @@ Life::Grid::Grid(std::vector<IntVec2> live) :
         spawnCell(c.x, c.y);
 }
 
-bool Life::Grid::isAlive(int x, int y) const {
+bool Life::Grid::isAlive(int x, int y) const
+{
+    x = std::min(x, m_width-1);
+    y = std::min(y, m_height-1);
     return m_data[x + y*m_width] == CellState::ALIVE;
 }
 
 void Life::Grid::flipCell(int x, int y)
 {
+    x = std::min(x, m_width-1);
+    y = std::min(y, m_height-1);
     if (m_data[x + y*m_width] == CellState::ALIVE)
         killCell(x, y);
     else spawnCell(x, y);
@@ -33,6 +38,8 @@ void Life::Grid::flipCell(int x, int y)
 
 void Life::Grid::spawnCell(int x, int y)
 {
+    x = std::min(x, m_width-1);
+    y = std::min(y, m_height-1);
     int cell = x + y*m_width;
     if (m_data[cell] == CellState::ALIVE)
         return;
@@ -53,6 +60,8 @@ void Life::Grid::spawnCell(int x, int y)
 
 void Life::Grid::killCell(int x, int y)
 {
+    x = std::min(x, m_width-1);
+    y = std::min(y, m_height-1);
     int cell = x + y*m_width;
     if (m_data[cell] == CellState::DEAD)
         return;
@@ -107,6 +116,8 @@ void Life::Grid::advanceTick()
 
 int Life::Grid::neighbors(int x, int y) const
 {
+    x = std::min(x, m_width-1);
+    y = std::min(y, m_height-1);
     return m_neighbors[x + y*m_width];
 }
 
