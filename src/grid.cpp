@@ -14,7 +14,7 @@ Life::Grid::Grid() :
 
 Life::Grid::Grid(std::vector<IntVec2> live) :
     m_data( std::move(std::vector<char>(m_width* m_height, CellState::DEAD)) ),
-    m_neighbors( std::move(std::vector<char>(m_width* m_height, 0)) )
+    m_neighbors( std::move(std::vector<char>(m_width*m_height, 0)) )
 {
     for (auto& c : live)
         spawnCell(c.x, c.y);
@@ -22,15 +22,15 @@ Life::Grid::Grid(std::vector<IntVec2> live) :
 
 bool Life::Grid::isAlive(int x, int y) const
 {
-    x = std::min(x, m_width-1);
-    y = std::min(y, m_height-1);
+    x = clampX(x);
+    y = clampY(y);
     return m_data[x + y*m_width] == CellState::ALIVE;
 }
 
 void Life::Grid::flipCell(int x, int y)
 {
-    x = std::min(x, m_width-1);
-    y = std::min(y, m_height-1);
+    x = clampX(x);
+    y = clampY(y);
     if (m_data[x + y*m_width] == CellState::ALIVE)
         killCell(x, y);
     else spawnCell(x, y);
@@ -38,8 +38,8 @@ void Life::Grid::flipCell(int x, int y)
 
 void Life::Grid::spawnCell(int x, int y)
 {
-    x = std::min(x, m_width-1);
-    y = std::min(y, m_height-1);
+    x = clampX(x);
+    y = clampY(y);
     int cell = x + y*m_width;
     if (m_data[cell] == CellState::ALIVE)
         return;
@@ -60,8 +60,8 @@ void Life::Grid::spawnCell(int x, int y)
 
 void Life::Grid::killCell(int x, int y)
 {
-    x = std::min(x, m_width-1);
-    y = std::min(y, m_height-1);
+    x = clampX(x);
+    y = clampY(y);
     int cell = x + y*m_width;
     if (m_data[cell] == CellState::DEAD)
         return;
@@ -156,6 +156,22 @@ void Life::Grid::setEdgeWrap(bool val)
 bool Life::Grid::inBounds(int x, int y) const
 {
     return x >= 0 && x < m_width && y >= 0 && y < m_height;
+}
+
+int Life::Grid::clampX(int x) const {
+    if (x < 0)
+        return 0;
+    if (x >= m_width)
+        return m_width-1;
+    return x;
+}
+
+int Life::Grid::clampY(int y) const {
+    if (y < 0)
+        return 0;
+    if (y >= m_height)
+        return m_height-1;
+    return y;
 }
 
 int Life::Grid::wrapX(int x) const

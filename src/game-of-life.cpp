@@ -6,9 +6,14 @@ namespace Life
 {
     void gameSetup()
     {
-        InitWindow(SCREEN_W, SCREEN_H, "test");
+        InitWindow(SCREEN_W, SCREEN_H, "Game Of Life");
         SetTargetFPS(144);
         rlImGuiSetup(true);
+    }
+    void gameTeardown()
+    {
+        rlImGuiShutdown();
+        CloseWindow();
     }
     void drawBegin()
     {
@@ -20,17 +25,6 @@ namespace Life
     {
         rlImGuiEnd();
         EndDrawing();
-    }
-    void gameTeardown()
-    {
-        rlImGuiShutdown();
-        CloseWindow();
-    }
-
-    int cellToPx(int cellCoord) { return cellCoord * cellSize; }
-    int pxToCellNum(int pxCoord) { return pxCoord / cellSize; }
-    int pxToCellVis(int pxCoord) {
-        return static_cast<int>(pxCoord / cellSize) * cellSize;
     }
 
 
@@ -48,9 +42,10 @@ namespace Life
             {center.x + 1,  center.y + 1}
         });
 
-        using namespace std::chrono;
+        namespace time = std::chrono;
         Life::UIData ui;
-        long long nextTickTime = time_point_cast<milliseconds>(steady_clock::now())
+        long long nextTickTime = time::
+            time_point_cast<time::milliseconds>(time::steady_clock::now())
             .time_since_epoch()
             .count();
 
@@ -72,11 +67,10 @@ namespace Life
 
     void update(Life::Grid& g, Life::UIData& uiData, long long& nextTickTime)
     {
-        using Life::pxToCellNum;
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !ImGui::GetIO().WantCaptureMouse)
-            g.spawnCell(pxToCellNum(uiData.mouse.x), pxToCellNum(uiData.mouse.y));
+            g.spawnCell(g.pxToCellNum(uiData.mouse.x), g.pxToCellNum(uiData.mouse.y));
         if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
-            g.killCell(pxToCellNum(uiData.mouse.x), pxToCellNum(uiData.mouse.y));
+            g.killCell(g.pxToCellNum(uiData.mouse.x), g.pxToCellNum(uiData.mouse.y));
         if (IsKeyPressed(KEY_SPACE))
             uiData.paused = !uiData.paused;
 
@@ -93,8 +87,9 @@ namespace Life
         constexpr int MAX_FRAMESKIP = 10;
         int loops = 0;
 
-        using namespace std::chrono;
-        auto currTime = time_point_cast<milliseconds>(steady_clock::now())
+        namespace time = std::chrono;
+        long long currTime = time::
+            time_point_cast<time::milliseconds>(time::steady_clock::now())
             .time_since_epoch()
             .count();
         while (currTime > nextTickTime && loops < MAX_FRAMESKIP)
@@ -117,13 +112,13 @@ namespace Life
                     int n = g.neighbors(i, j);
                     if (g.isAlive(i, j))
                         DrawRectangle(
-                            Life::cellToPx(i), Life::cellToPx(j),
+                            g.cellToPx(i), g.cellToPx(j),
                             Life::cellSize, Life::cellSize,
                             n < 2 || n > 3 ? DARKBLUE : BLUE    // will die : stay alive
                         );
                     else if (n == 3)    // not alive but will come alive
                         DrawRectangle(
-                            Life::cellToPx(i), Life::cellToPx(j),
+                            g.cellToPx(i), g.cellToPx(j),
                             Life::cellSize, Life::cellSize, SKYBLUE
                         );
                 }
@@ -135,32 +130,32 @@ namespace Life
                 for (int j = 0; j < g.m_height; j++)
                     if (g.isAlive(i, j))
                         DrawRectangle(
-                            Life::cellToPx(i), Life::cellToPx(j),
+                            g.cellToPx(i), g.cellToPx(j),
                             Life::cellSize, Life::cellSize, BLUE
                         );
         }
 
         // Draw grid lines
         for (int i = 0; i < Life::SCREEN_W; i++)
-            DrawLine(Life::cellToPx(i), 0, Life::cellToPx(i), Life::SCREEN_H, DARKGRAY);
+            DrawLine(g.cellToPx(i), 0, g.cellToPx(i), Life::SCREEN_H, DARKGRAY);
         for (int j = 0; j < Life::SCREEN_H; j++)
-            DrawLine(0, Life::cellToPx(j), Life::SCREEN_W, Life::cellToPx(j), DARKGRAY);
+            DrawLine(0, g.cellToPx(j), Life::SCREEN_W, g.cellToPx(j), DARKGRAY);
 
         // Highlight moused cell
         DrawRectangle(
-            Life::pxToCellVis(options.mouse.x),
-            Life::pxToCellVis(options.mouse.y),
+            g.pxToCellVis(options.mouse.x),
+            g.pxToCellVis(options.mouse.y),
             Life::cellSize, Life::cellSize, LIGHTGRAY
         );
     }
     void uiWindow(Life::Grid& g, Life::UIData& ui) {
         using namespace ImGui;
 
-        int cellX = Life::pxToCellNum(ui.mouse.x);
-        int cellY = Life::pxToCellNum(ui.mouse.y);
+        int cellX = g.clampX(g.pxToCellNum(ui.mouse.x));
+        int cellY = g.clampY(g.pxToCellNum(ui.mouse.y));
         Begin("Simulation Controls/Settings", NULL);
 
-        Text("FPS: %d", static_cast<int>(ImGui::GetIO().Framerate));
+        Text("FPS: %d", GetFPS());
         NewLine();
 
         SliderInt("Sim Speed", &(ui.ticksPerSec), 1, 10, "%d");
@@ -185,8 +180,8 @@ namespace Life
         Text(ui.screenWrap ? "On" : "Off");
         NewLine();
 
-        Text("mouse x: %d (%d)", std::min(cellX, g.m_width-1), ui.mouse.x);
-        Text("mouse y: %d (%d)", std::min(cellY, g.m_height-1), ui.mouse.y);
+        Text("mouse x: %d (%d)", cellX, ui.mouse.x);
+        Text("mouse y: %d (%d)", cellY, ui.mouse.y);
         Text("neighbors: %d", g.neighbors(cellX, cellY));
         End();
     }

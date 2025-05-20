@@ -14,13 +14,10 @@ namespace Life
     struct IntVec2 { int x, y; };
 
     void gameSetup();
+    void gameTeardown();
     void drawBegin();
     void drawEnd();
-    void gameTeardown();
 
-    int cellToPx(int cellCoord);
-    int pxToCellNum(int pxCoord);
-    int pxToCellVis(int pxCoord);
     
     class Grid
     {
@@ -37,6 +34,13 @@ namespace Life
         void killCell(int x, int y);
         void advanceTick();
         int  neighbors(int x, int y) const;
+        int  cellToPx(int cellCoord) const { return cellCoord * cellSize; }
+        int  pxToCellNum(int pxCoord) const { return pxCoord / cellSize; }
+        int  pxToCellVis(int pxCoord) const {
+            return static_cast<int>(pxCoord / cellSize) * cellSize;
+        }
+        int clampX(int x) const;
+        int clampY(int) const;
         
         void setEdgeWrap(bool val);
 
@@ -48,6 +52,7 @@ namespace Life
 
         enum CellState { DEAD, ALIVE };
         bool inBounds(int x, int y) const;
+        
         int wrapX(int x) const;
         int wrapY(int y) const;
     };
@@ -59,8 +64,10 @@ namespace Life
         bool showDetailedCellState = false;
         bool screenWrap = false;
     };
-    void Game();
+    
     void update(Life::Grid& g, Life::UIData& ui, long long& nextTickTime);
     void draw(const Life::Grid& g, const Life::UIData& options);
     void uiWindow(Life::Grid& g, Life::UIData& ui);
+
+    void Game();
 }
