@@ -27,13 +27,13 @@ Number  | Goal          | Timeline      | Notes
 5 | Tick vs Frame Rate  | 3/31 - 4/11   | - done 4/10 <br> [Github issue here](https://github.com/hadan24/game-of-life/issues/3)
 6 | Create UI           | 4/14 - 4/25   | - done 4/28 (technically 4/27, got a UI w/ original intended features working, was hoping to add screen wrapping but no time, it'll be new feature) <br> [Github issue here](https://github.com/hadan24/game-of-life/issues/6)
 7 | Screen Wrapping     | 4/28 - 5/2    | - done 5/3 (technically 5/2, spent more time to fix [mouse bounds bug](https://github.com/hadan24/game-of-life/issues/9)) <br> [goal's Github issue here](https://github.com/hadan24/game-of-life/issues/11)
-8 | Zoom In/Out         | 5/5 - 5/16    | - <br> [Github issue here](https://github.com/hadan24/game-of-life/issues/7)
+8 | Clean Code          | 5/19 - 5/30   | - <br> [Github issue here](https://github.com/hadan24/game-of-life/issues/12)
 
 #### Stretch Goals
 
 Number  | Goal          | Timeline      | Notes
 --|---------------------|---------------|--------
-1 |
+1 | Zoom In/Out         | TBD           | - moved back to stretch goal to move on to new project, may return sometime <br> [Github issue here](https://github.com/hadan24/game-of-life/issues/7)
 
 
 ### Resources/Notes to Self
