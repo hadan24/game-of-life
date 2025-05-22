@@ -112,7 +112,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)dep\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dep\include;$(SolutionDir)vcpkg_installed\vcpkg\pkgs\raylib_x64-windows\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -120,7 +120,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)dep;$(SolutionDir)dep\imgui;$(SolutionDir)dep\rlimgui;$(SolutionDir)vcpkg_installed\vcpkg\pkgs\raylib_x64-windows\lib;$(SolutionDir)vcpkg_installed\vcpkg\pkgs\raylib_x64-windows\bin</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)dep;$(SolutionDir)dep\imgui;$(SolutionDir)dep\rlimgui;$(SolutionDir)vcpkg_installed\vcpkg\pkgs\raylib_x64-windows\bin</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -146,7 +146,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)dep\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dep\include;$(SolutionDir)vcpkg_installed\vcpkg\pkgs\raylib_x64-windows\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -154,7 +154,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)dep;$(SolutionDir)dep\imgui;$(SolutionDir)dep\rlimgui;$(SolutionDir)vcpkg_installed\vcpkg\pkgs\raylib_x64-windows\lib;$(SolutionDir)vcpkg_installed\vcpkg\pkgs\raylib_x64-windows\bin</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)dep;$(SolutionDir)dep\imgui;$(SolutionDir)dep\rlimgui;$(SolutionDir)vcpkg_installed\vcpkg\pkgs\raylib_x64-windows\bin</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -170,6 +170,7 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="bin\x64\Release\raylib.dll" />
     <None Include="README.md" />
     <None Include="vcpkg_installed\vcpkg\pkgs\raylib_x64-windows\bin\raylib.dll" />
     <None Include="vcpkg_installed\vcpkg\pkgs\raylib_x64-windows\bin\raylib.pdb" />

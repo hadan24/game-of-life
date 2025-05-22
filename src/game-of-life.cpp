@@ -1,6 +1,4 @@
 #include "game-of-life.h"
-#include <chrono>
-#include <array>
 
 namespace Life
 {
@@ -28,7 +26,7 @@ namespace Life
     }
 
 
-    void Game()
+    void runGame()
     {
         Life::IntVec2 center = {
             (Life::SCREEN_W / Life::cellSize) / 2,
@@ -42,12 +40,8 @@ namespace Life
             {center.x + 1,  center.y + 1}
         });
 
-        namespace time = std::chrono;
-        Life::UIData ui;
-        long long nextTickTime = time::
-            time_point_cast<time::milliseconds>(time::steady_clock::now())
-            .time_since_epoch()
-            .count();
+        Life::UIData ui = {};
+        double nextTickTime = GetTime();
 
         while (!WindowShouldClose())
         {
@@ -65,7 +59,7 @@ namespace Life
         }
     }
 
-    void update(Life::Grid& g, Life::UIData& uiData, long long& nextTickTime)
+    void update(Life::Grid& g, Life::UIData& uiData, double& nextTickTime)
     {
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !ImGui::GetIO().WantCaptureMouse)
             g.spawnCell(g.pxToCellNum(uiData.mouse.x), g.pxToCellNum(uiData.mouse.y));
@@ -83,15 +77,11 @@ namespace Life
             g.advanceTick();
 
 
-        int tickWaitInterval = 1000 / uiData.ticksPerSec;  // in milliseconds
+        double tickWaitInterval = 1.0 / uiData.ticksPerSec;  // in milliseconds
         constexpr int MAX_FRAMESKIP = 10;
         int loops = 0;
 
-        namespace time = std::chrono;
-        long long currTime = time::
-            time_point_cast<time::milliseconds>(time::steady_clock::now())
-            .time_since_epoch()
-            .count();
+        double currTime = GetTime();
         while (currTime > nextTickTime && loops < MAX_FRAMESKIP)
         {
             if (!uiData.paused)

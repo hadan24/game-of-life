@@ -65,9 +65,9 @@ namespace Life
         bool screenWrap = false;
     };
     
-    void update(Life::Grid& g, Life::UIData& ui, long long& nextTickTime);
+    void update(Life::Grid& g, Life::UIData& ui, double& nextTickTime);
     void draw(const Life::Grid& g, const Life::UIData& options);
     void uiWindow(Life::Grid& g, Life::UIData& ui);
 
-    void Game();
+    void runGame();
 }
