@@ -1,3 +1,6 @@
+#include "imgui.h"
+#include "raylib.h"
+#include "rlimgui.h"
 #include "game-of-life.h"
 
 namespace Life
@@ -41,7 +44,7 @@ namespace Life
         });
 
         Life::UIData ui = {};
-        double nextTickTime = GetTime();
+        double nextTickTime = GetTime();    // in seconds
 
         while (!WindowShouldClose())
         {
@@ -54,17 +57,19 @@ namespace Life
 
             Life::drawBegin();
             Life::draw(g, ui);
-            Life::uiWindow(g, ui);
+            Life::ui(g, ui);
             Life::drawEnd();
         }
     }
 
     void update(Life::Grid& g, Life::UIData& uiData, double& nextTickTime)
     {
+        int x = g.pxToCellNum(uiData.mouse.x);
+        int y = g.pxToCellNum(uiData.mouse.y);
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !ImGui::GetIO().WantCaptureMouse)
-            g.spawnCell(g.pxToCellNum(uiData.mouse.x), g.pxToCellNum(uiData.mouse.y));
+            g.spawnCell(x, y);
         if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
-            g.killCell(g.pxToCellNum(uiData.mouse.x), g.pxToCellNum(uiData.mouse.y));
+            g.killCell(x, y);
         if (IsKeyPressed(KEY_SPACE))
             uiData.paused = !uiData.paused;
 
@@ -77,7 +82,7 @@ namespace Life
             g.advanceTick();
 
 
-        double tickWaitInterval = 1.0 / uiData.ticksPerSec;  // in milliseconds
+        double tickWaitInterval = 1.0 / uiData.ticksPerSec;  // in seconds
         constexpr int MAX_FRAMESKIP = 10;
         int loops = 0;
 
@@ -93,7 +98,7 @@ namespace Life
     void draw(const Life::Grid& g, const Life::UIData& options)
     {
         // Draw cells
-        if (options.showDetailedCellState)
+        if (options.showDetailedState)
         {
             for (int i = 0; i < g.m_width; i++)
             {
@@ -138,7 +143,7 @@ namespace Life
             Life::cellSize, Life::cellSize, LIGHTGRAY
         );
     }
-    void uiWindow(Life::Grid& g, Life::UIData& ui) {
+    void ui(Life::Grid& g, Life::UIData& ui) {
         using namespace ImGui;
 
         int cellX = g.clampX(g.pxToCellNum(ui.mouse.x));
@@ -157,9 +162,9 @@ namespace Life
         NewLine();
 
         if ( Button("Show Detailed Cell States"))
-            ui.showDetailedCellState = !ui.showDetailedCellState;
+            ui.showDetailedState = !ui.showDetailedState;
         SameLine();
-        Text(ui.showDetailedCellState ? "On" : "Off");
+        Text(ui.showDetailedState ? "On" : "Off");
 
         if (Button("Toggle Screen Wrapping"))
         {

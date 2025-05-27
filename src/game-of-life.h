@@ -1,8 +1,4 @@
 #pragma once
-
-#include "imgui.h"
-#include "rlimgui.h"
-#include "raylib.h"
 #include <vector>
 
 namespace Life
@@ -61,13 +57,13 @@ namespace Life
         int ticksPerSec = 2;
         IntVec2 mouse = {0, 0};
         bool paused = true;
-        bool showDetailedCellState = false;
+        bool showDetailedState = false;
         bool screenWrap = false;
     };
     
     void update(Life::Grid& g, Life::UIData& ui, double& nextTickTime);
     void draw(const Life::Grid& g, const Life::UIData& options);
-    void uiWindow(Life::Grid& g, Life::UIData& ui);
+    void ui(Life::Grid& g, Life::UIData& ui);
 
     void runGame();
 }
