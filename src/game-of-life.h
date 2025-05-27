@@ -8,12 +8,6 @@ namespace Life
     inline int cellSize = 20;
 
     struct IntVec2 { int x, y; };
-
-    void gameSetup();
-    void gameTeardown();
-    void drawBegin();
-    void drawEnd();
-
     
     class Grid
     {
@@ -60,10 +54,26 @@ namespace Life
         bool showDetailedState = false;
         bool screenWrap = false;
     };
-    
-    void update(Life::Grid& g, Life::UIData& ui, double& nextTickTime);
-    void draw(const Life::Grid& g, const Life::UIData& options);
-    void ui(Life::Grid& g, Life::UIData& ui);
 
-    void runGame();
+    class Game
+    {
+    public:
+        Game();
+        Game(std::vector<IntVec2> live);
+        ~Game();
+
+        void run();
+
+    private:
+        Grid g;
+        UIData options;
+        double nextTickTime;
+
+        void drawBegin();
+        void drawEnd();
+
+        void update();
+        void draw();
+        void ui();
+    };
 }
