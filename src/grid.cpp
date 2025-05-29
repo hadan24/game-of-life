@@ -6,13 +6,15 @@ static const std::array<Life::IntVec2, 8> dirs(
     { {0,-1}, {1,-1}, {1,0}, {1,1}, {0,1}, {-1,1}, {-1,0}, {-1,-1} }
 );
 
+namespace Life
+{
 
-Life::Grid::Grid() :
+Grid::Grid() :
     m_data( std::move(std::vector<char>(m_width*m_height, CellState::DEAD)) ),
     m_neighbors( std::move(std::vector<char>(m_width*m_height, 0)) )
 {}
 
-Life::Grid::Grid(std::vector<IntVec2> live) :
+Grid::Grid(const std::vector<IntVec2>& live) :
     m_data( std::move(std::vector<char>(m_width* m_height, CellState::DEAD)) ),
     m_neighbors( std::move(std::vector<char>(m_width*m_height, 0)) )
 {
@@ -20,14 +22,14 @@ Life::Grid::Grid(std::vector<IntVec2> live) :
         spawnCell(c.x, c.y);
 }
 
-bool Life::Grid::isAlive(int x, int y) const
+bool Grid::isAlive(int x, int y) const
 {
     x = clampX(x);
     y = clampY(y);
     return m_data[x + y*m_width] == CellState::ALIVE;
 }
 
-void Life::Grid::flipCell(int x, int y)
+void Grid::flipCell(int x, int y)
 {
     x = clampX(x);
     y = clampY(y);
@@ -36,7 +38,7 @@ void Life::Grid::flipCell(int x, int y)
     else spawnCell(x, y);
 }
 
-void Life::Grid::spawnCell(int x, int y)
+void Grid::spawnCell(int x, int y)
 {
     x = clampX(x);
     y = clampY(y);
@@ -58,7 +60,7 @@ void Life::Grid::spawnCell(int x, int y)
     }
 }
 
-void Life::Grid::killCell(int x, int y)
+void Grid::killCell(int x, int y)
 {
     x = clampX(x);
     y = clampY(y);
@@ -80,7 +82,7 @@ void Life::Grid::killCell(int x, int y)
     }
 }
 
-void Life::Grid::advanceTick()
+void Grid::advanceTick()
 {
     for (int i = 0; i < m_neighbors.size(); i++)
     {
@@ -114,14 +116,14 @@ void Life::Grid::advanceTick()
     }
 }
 
-int Life::Grid::neighbors(int x, int y) const
+int Grid::neighbors(int x, int y) const
 {
     x = std::min(x, m_width-1);
     y = std::min(y, m_height-1);
     return m_neighbors[x + y*m_width];
 }
 
-void Life::Grid::setEdgeWrap(bool val)
+void Grid::setEdgeWrap(bool val)
 {
     edgeWrap = val;
 
@@ -153,12 +155,12 @@ void Life::Grid::setEdgeWrap(bool val)
 }
 
 
-bool Life::Grid::inBounds(int x, int y) const
+bool Grid::inBounds(int x, int y) const
 {
     return x >= 0 && x < m_width && y >= 0 && y < m_height;
 }
 
-int Life::Grid::clampX(int x) const {
+int Grid::clampX(int x) const {
     if (x < 0)
         return 0;
     if (x >= m_width)
@@ -166,7 +168,7 @@ int Life::Grid::clampX(int x) const {
     return x;
 }
 
-int Life::Grid::clampY(int y) const {
+int Grid::clampY(int y) const {
     if (y < 0)
         return 0;
     if (y >= m_height)
@@ -174,7 +176,7 @@ int Life::Grid::clampY(int y) const {
     return y;
 }
 
-int Life::Grid::wrapX(int x) const
+int Grid::wrapX(int x) const
 {
     if (x < 0)
         return m_width + x;
@@ -183,7 +185,7 @@ int Life::Grid::wrapX(int x) const
     return x;
 }
 
-int Life::Grid::wrapY(int y) const
+int Grid::wrapY(int y) const
 {
     if (y < 0)
         return m_height + y;
@@ -191,3 +193,5 @@ int Life::Grid::wrapY(int y) const
         return y - m_height;
     return y;
 }
+
+}   // namespace Life

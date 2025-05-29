@@ -23,7 +23,7 @@ namespace Life
         const int m_height = SCREEN_H / cellSize;
 
         Grid();
-        Grid(std::vector<IntVec2> live);
+        Grid(const std::vector<IntVec2>& live);
 
         bool isAlive(int x, int y) const;
         void flipCell(int x, int y);
@@ -54,7 +54,7 @@ namespace Life
     {
     public:
         Game();
-        Game(std::vector<IntVec2> live);
+        Game(const std::vector<IntVec2>& live);
         ~Game();
 
         void run();

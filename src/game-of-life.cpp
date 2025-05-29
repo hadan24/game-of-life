@@ -14,7 +14,7 @@ Game::Game() : nextTickTime(0)
     rlImGuiSetup(true);
 }
 
-Game::Game(std::vector<IntVec2> live) :
+Game::Game(const std::vector<IntVec2>& live) :
     g( std::move(live) ),
     nextTickTime(0)
 {
