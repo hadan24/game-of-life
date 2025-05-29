@@ -50,22 +50,32 @@ void Game::run()
 }
 
 
-void Game::drawBegin()
+void Game::drawBegin() const
 {
     BeginDrawing();
     rlImGuiBegin();
     ClearBackground(BLACK);
 }
-void Game::drawEnd()
+void Game::drawEnd() const
 {
     rlImGuiEnd();
     EndDrawing();
 }
 
+int Game::cellToPx(int cellCoord) const
+{
+    return cellCoord * cellSize;
+}
+int Game::pxToCellNum(int pxCoord) const
+{
+    return pxCoord / cellSize;
+}
+
+
 void Game::update()
 {
-    int x = g.pxToCellNum(options.mouse.x);
-    int y = g.pxToCellNum(options.mouse.y);
+    int x = pxToCellNum(options.mouse.x);
+    int y = pxToCellNum(options.mouse.y);
     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !ImGui::GetIO().WantCaptureMouse)
         g.spawnCell(x, y);
     if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
@@ -76,7 +86,7 @@ void Game::update()
     if (
         (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT)) &&
         IsKeyDown(KEY_ENTER)
-        )
+    )
         g.advanceTick();
     else if (IsKeyPressed(KEY_ENTER))
         g.advanceTick();
@@ -94,8 +104,9 @@ void Game::update()
         nextTickTime += tickWaitInterval;
         loops++;
     }
-}
-void Game::draw()
+}   // Game::update()
+
+void Game::draw() const
 {
     // Draw cells
     if (options.showDetailedState)
@@ -107,13 +118,13 @@ void Game::draw()
                 int n = g.neighbors(i, j);
                 if (g.isAlive(i, j))
                     DrawRectangle(
-                        g.cellToPx(i), g.cellToPx(j),
+                        cellToPx(i), cellToPx(j),
                         Life::cellSize, Life::cellSize,
                         n < 2 || n > 3 ? DARKBLUE : BLUE    // will die : stay alive
                     );
                 else if (n == 3)    // not alive but will come alive
                     DrawRectangle(
-                        g.cellToPx(i), g.cellToPx(j),
+                        cellToPx(i), cellToPx(j),
                         Life::cellSize, Life::cellSize, SKYBLUE
                     );
             }
@@ -125,30 +136,31 @@ void Game::draw()
             for (int j = 0; j < g.m_height; j++)
                 if (g.isAlive(i, j))
                     DrawRectangle(
-                        g.cellToPx(i), g.cellToPx(j),
+                        cellToPx(i), cellToPx(j),
                         Life::cellSize, Life::cellSize, BLUE
                     );
     }
 
     // Draw grid lines
     for (int i = 0; i < Life::SCREEN_W; i++)
-        DrawLine(g.cellToPx(i), 0, g.cellToPx(i), Life::SCREEN_H, DARKGRAY);
+        DrawLine(cellToPx(i), 0, cellToPx(i), Life::SCREEN_H, DARKGRAY);
     for (int j = 0; j < Life::SCREEN_H; j++)
-        DrawLine(0, g.cellToPx(j), Life::SCREEN_W, g.cellToPx(j), DARKGRAY);
+        DrawLine(0, cellToPx(j), Life::SCREEN_W, cellToPx(j), DARKGRAY);
 
     // Highlight moused cell
     DrawRectangle(
-        g.pxToCellVis(options.mouse.x),
-        g.pxToCellVis(options.mouse.y),
+        static_cast<int>(options.mouse.x / Life::cellSize) * Life::cellSize,
+        static_cast<int>(options.mouse.y / Life::cellSize) * Life::cellSize,
         Life::cellSize, Life::cellSize, LIGHTGRAY
     );
-}
+}   // Game::draw()
+
 void Game::ui()
 {
     using namespace ImGui;
 
-    int cellX = g.clampX(g.pxToCellNum(options.mouse.x));
-    int cellY = g.clampY(g.pxToCellNum(options.mouse.y));
+    int cellX = g.clampX(pxToCellNum(options.mouse.x));
+    int cellY = g.clampY(pxToCellNum(options.mouse.y));
     Begin("Simulation Controls/Settings", NULL);
 
     Text("FPS: %d", GetFPS());
@@ -180,6 +192,6 @@ void Game::ui()
     Text("mouse y: %d (%d)", cellY, options.mouse.y);
     Text("neighbors: %d", g.neighbors(cellX, cellY));
     End();
-}
+}   // Game::ui()
 
-}
+}   // namespace Life

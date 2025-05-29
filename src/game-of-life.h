@@ -8,6 +8,13 @@ namespace Life
     inline int cellSize = 20;
 
     struct IntVec2 { int x, y; };
+    struct UIData {
+        IntVec2 mouse = { 0, 0 };
+        int ticksPerSec = 2;
+        bool paused = true;
+        bool showDetailedState = false;
+        bool screenWrap = false;
+    };
     
     class Grid
     {
@@ -23,12 +30,8 @@ namespace Life
         void spawnCell(int x, int y);
         void killCell(int x, int y);
         void advanceTick();
-        int  neighbors(int x, int y) const;
-        int  cellToPx(int cellCoord) const { return cellCoord * cellSize; }
-        int  pxToCellNum(int pxCoord) const { return pxCoord / cellSize; }
-        int  pxToCellVis(int pxCoord) const {
-            return static_cast<int>(pxCoord / cellSize) * cellSize;
-        }
+        int neighbors(int x, int y) const;
+        
         int clampX(int x) const;
         int clampY(int) const;
         
@@ -47,14 +50,6 @@ namespace Life
         int wrapY(int y) const;
     };
 
-    struct UIData {
-        int ticksPerSec = 2;
-        IntVec2 mouse = {0, 0};
-        bool paused = true;
-        bool showDetailedState = false;
-        bool screenWrap = false;
-    };
-
     class Game
     {
     public:
@@ -69,11 +64,13 @@ namespace Life
         UIData options;
         double nextTickTime;
 
-        void drawBegin();
-        void drawEnd();
+        void drawBegin() const;
+        void drawEnd() const;
+        int cellToPx(int cellCoord) const;
+        int pxToCellNum(int pxCoord) const;
 
         void update();
-        void draw();
+        void draw() const;
         void ui();
     };
 }
