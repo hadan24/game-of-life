@@ -24,6 +24,7 @@ namespace Life
 
         Grid();
         Grid(const std::vector<IntVec2>& live);
+        Grid(std::vector<IntVec2>&& live);
 
         bool isAlive(int x, int y) const;
         void flipCell(int x, int y);
@@ -32,20 +33,15 @@ namespace Life
         void advanceTick();
         int neighbors(int x, int y) const;
         
-        int clampX(int x) const;
-        int clampY(int) const;
-        
         void setEdgeWrap(bool val);
 
     private:
         std::vector<char> m_data;
         std::vector<char> m_neighbors;
-
         bool edgeWrap = false;
 
         enum CellState { DEAD, ALIVE };
         bool inBounds(int x, int y) const;
-        
         int wrapX(int x) const;
         int wrapY(int y) const;
     };
@@ -55,6 +51,7 @@ namespace Life
     public:
         Game();
         Game(const std::vector<IntVec2>& live);
+        Game(std::vector<IntVec2>&& live);
         ~Game();
 
         void run();

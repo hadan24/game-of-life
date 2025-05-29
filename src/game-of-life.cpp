@@ -15,12 +15,22 @@ Game::Game() : nextTickTime(0)
 }
 
 Game::Game(const std::vector<IntVec2>& live) :
-    g( std::move(live) ),
+    g(live),
     nextTickTime(0)
 {
     InitWindow(SCREEN_W, SCREEN_H, "Game Of Life");
     int refreshRate = GetMonitorRefreshRate(0);
     SetTargetFPS(refreshRate > 144 ? refreshRate/2 : refreshRate);
+    rlImGuiSetup(true);
+}
+
+Game::Game(std::vector<IntVec2>&& live) :
+    g(std::move(live)),
+    nextTickTime(0)
+{
+    InitWindow(SCREEN_W, SCREEN_H, "Game Of Life");
+    int refreshRate = GetMonitorRefreshRate(0);
+    SetTargetFPS(refreshRate > 144 ? refreshRate / 2 : refreshRate);
     rlImGuiSetup(true);
 }
 
@@ -111,34 +121,36 @@ void Game::draw() const
     // Draw cells
     if (options.showDetailedState)
     {
-        for (int i = 0; i < g.m_width; i++)
+        for (int i = 0; i < (g.m_width * g.m_height); i++)
         {
-            for (int j = 0; j < g.m_height; j++)
-            {
-                int n = g.neighbors(i, j);
-                if (g.isAlive(i, j))
-                    DrawRectangle(
-                        cellToPx(i), cellToPx(j),
-                        Life::cellSize, Life::cellSize,
-                        n < 2 || n > 3 ? DARKBLUE : BLUE    // will die : stay alive
-                    );
-                else if (n == 3)    // not alive but will come alive
-                    DrawRectangle(
-                        cellToPx(i), cellToPx(j),
-                        Life::cellSize, Life::cellSize, SKYBLUE
-                    );
-            }
+            int y = i / g.m_width;
+            int x = i - (y*g.m_width);
+            int n = g.neighbors(x, y);
+
+            if (g.isAlive(x, y))
+                DrawRectangle(
+                    cellToPx(x), cellToPx(y), Life::cellSize, Life::cellSize,
+                    n < 2 || n > 3 ? DARKBLUE : BLUE    // will die : stay alive
+                );
+            else if (n == 3)    // not alive but will come alive
+                DrawRectangle(
+                    cellToPx(x), cellToPx(y),
+                    Life::cellSize, Life::cellSize, SKYBLUE
+                );
         }
     }
     else
     {
-        for (int i = 0; i < g.m_width; i++)
-            for (int j = 0; j < g.m_height; j++)
-                if (g.isAlive(i, j))
-                    DrawRectangle(
-                        cellToPx(i), cellToPx(j),
-                        Life::cellSize, Life::cellSize, BLUE
-                    );
+        for (int i = 0; i < (g.m_width * g.m_height); i++)
+        {
+            int y = i / g.m_width;
+            int x = i - (y*g.m_width);
+            if (g.isAlive(x, y))
+                DrawRectangle(
+                    cellToPx(x), cellToPx(y),
+                    Life::cellSize, Life::cellSize, BLUE
+                );
+        }
     }
 
     // Draw grid lines
@@ -158,9 +170,6 @@ void Game::draw() const
 void Game::ui()
 {
     using namespace ImGui;
-
-    int cellX = g.clampX(pxToCellNum(options.mouse.x));
-    int cellY = g.clampY(pxToCellNum(options.mouse.y));
     Begin("Simulation Controls/Settings", NULL);
 
     Text("FPS: %d", GetFPS());
@@ -188,9 +197,15 @@ void Game::ui()
     Text(options.screenWrap ? "On" : "Off");
     NewLine();
 
+    int cellX = pxToCellNum(options.mouse.x);
+    int cellY = pxToCellNum(options.mouse.y);
     Text("mouse x: %d (%d)", cellX, options.mouse.x);
     Text("mouse y: %d (%d)", cellY, options.mouse.y);
-    Text("neighbors: %d", g.neighbors(cellX, cellY));
+    int n = g.neighbors(cellX, cellY);
+    if (n == -1)
+        Text("neighbors: [invalid cell]");
+    else
+        Text("neighbors: %d", n);
     End();
 }   // Game::ui()
 

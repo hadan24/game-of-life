@@ -22,17 +22,26 @@ Grid::Grid(const std::vector<IntVec2>& live) :
         spawnCell(c.x, c.y);
 }
 
+Grid::Grid(std::vector<IntVec2>&& live) :
+    m_data(std::move(std::vector<char>(m_width* m_height, CellState::DEAD))),
+    m_neighbors(std::move(std::vector<char>(m_width* m_height, 0)))
+{
+    for (auto& c : live)
+        spawnCell(c.x, c.y);
+}
+
 bool Grid::isAlive(int x, int y) const
 {
-    x = clampX(x);
-    y = clampY(y);
+    if (!inBounds(x, y))
+        return false;
     return m_data[x + y*m_width] == CellState::ALIVE;
 }
 
 void Grid::flipCell(int x, int y)
 {
-    x = clampX(x);
-    y = clampY(y);
+    if (!inBounds(x, y))
+        return;
+
     if (m_data[x + y*m_width] == CellState::ALIVE)
         killCell(x, y);
     else spawnCell(x, y);
@@ -40,10 +49,8 @@ void Grid::flipCell(int x, int y)
 
 void Grid::spawnCell(int x, int y)
 {
-    x = clampX(x);
-    y = clampY(y);
     int cell = x + y*m_width;
-    if (m_data[cell] == CellState::ALIVE)
+    if (!inBounds(x, y) || m_data[cell] == CellState::ALIVE)
         return;
 
     m_data[cell] = CellState::ALIVE;
@@ -62,22 +69,20 @@ void Grid::spawnCell(int x, int y)
 
 void Grid::killCell(int x, int y)
 {
-    x = clampX(x);
-    y = clampY(y);
     int cell = x + y*m_width;
-    if (m_data[cell] == CellState::DEAD)
+    if (!inBounds(x, y) || m_data[cell] == CellState::DEAD)
         return;
 
     m_data[cell] = CellState::DEAD;
     for (auto& d : dirs)
     {
-        if (inBounds(x + d.x, y + d.y))
+        if (inBounds(x+d.x, y+d.y))
             m_neighbors[cell + d.x + d.y*m_width]--;
         else if (edgeWrap)
         {
             int tempX = wrapX(x + d.x);
             int tempY = wrapY(y + d.y);
-            m_neighbors[tempX + tempY * m_width]++;
+            m_neighbors[tempX + tempY*m_width]--;
         }
     }
 }
@@ -91,35 +96,33 @@ void Grid::advanceTick()
         else m_data[i] = CellState::DEAD;
     }
 
-    for (int y = 0; y < m_height; y++)
+    for (int i = 0; i < m_data.size(); i++)
     {
-        int col = y*m_width;
-        for (int x = 0; x < m_width; x++)
-        {
-            m_neighbors[x + col] = 0;
+        int y = i / m_width;
+        int x = i - (y*m_width);
 
-            for (auto& d : dirs)
-            {
-                if (
-                    inBounds(x+d.x, y+d.y) &&
-                    m_data[x+d.x + (y+d.y)*m_width] == CellState::ALIVE
-                )
-                    m_neighbors[x + col]++;
-                else if (
-                    !inBounds(x+d.x, y+d.y) &&
-                    edgeWrap &&
-                    m_data[wrapX(x+d.x) + (wrapY(y+d.y)*m_width)] == CellState::ALIVE
-                )
-                    m_neighbors[x + col]++;
-            }
+        m_neighbors[i] = 0;
+        for (auto& d : dirs)
+        {
+            if (
+                inBounds(x+d.x, y+d.y) &&
+                m_data[x+d.x + (y+d.y) * m_width] == CellState::ALIVE
+            )
+                m_neighbors[i]++;
+            else if (
+                !inBounds(x+d.x, y+d.y) &&
+                edgeWrap &&
+                m_data[wrapX(x+d.x) + (wrapY(y+d.y)*m_width)] == CellState::ALIVE
+            )
+                m_neighbors[i]++;
         }
     }
-}
+}   // Grid::advanceTick()
 
 int Grid::neighbors(int x, int y) const
 {
-    x = std::min(x, m_width-1);
-    y = std::min(y, m_height-1);
+    if (!inBounds(x, y))
+        return -1;
     return m_neighbors[x + y*m_width];
 }
 
@@ -134,9 +137,9 @@ void Grid::setEdgeWrap(bool val)
         {
             int currNeighborX = wrapX(x + dx);
             if (m_data[currNeighborX + lastRow] == CellState::ALIVE)
-                m_neighbors[x] += edgeWrap ? 1 : -1;    // top row, check last
+                m_neighbors[x] += (edgeWrap ? 1 : -1);  // top row, check last
             if (m_data[currNeighborX] == CellState::ALIVE)
-                m_neighbors[x + lastRow] += edgeWrap ? 1 : -1;  // bot, check top
+                m_neighbors[x + lastRow] += (edgeWrap ? 1 : -1);    // bot, check top
         }
     }
     int lastCol = m_width - 1;
@@ -147,33 +150,17 @@ void Grid::setEdgeWrap(bool val)
         {
             int currNeighborY = wrapY(y+dy) * m_width;
             if (m_data[lastCol + currNeighborY] == CellState::ALIVE)
-                m_neighbors[currY] += edgeWrap ? 1 : -1;    // left col, check right
+                m_neighbors[currY] += (edgeWrap ? 1 : -1);  // left col, check right
             if (m_data[currNeighborY] == CellState::ALIVE)
-                m_neighbors[lastCol + currY] += edgeWrap ? 1 : -1;  // right, check left
+                m_neighbors[lastCol + currY] += (edgeWrap ? 1 : -1);    // right, check left
         }
     }
-}
+}   // Grid::setEdgeWrap
 
 
 bool Grid::inBounds(int x, int y) const
 {
     return x >= 0 && x < m_width && y >= 0 && y < m_height;
-}
-
-int Grid::clampX(int x) const {
-    if (x < 0)
-        return 0;
-    if (x >= m_width)
-        return m_width-1;
-    return x;
-}
-
-int Grid::clampY(int y) const {
-    if (y < 0)
-        return 0;
-    if (y >= m_height)
-        return m_height-1;
-    return y;
 }
 
 int Grid::wrapX(int x) const
