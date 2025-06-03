@@ -129,7 +129,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)dep\include;$(SolutionDir)vcpkg_installed\vcpkg\pkgs\raylib_x64-windows\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dep\imgui;$(SolutionDir)dep\raylib;$(SolutionDir)dep\rlimgui;$(SolutionDir)vcpkg_installed\vcpkg\pkgs\raylib_x64-windows\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -146,7 +146,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)dep\include;$(SolutionDir)vcpkg_installed\vcpkg\pkgs\raylib_x64-windows\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dep\imgui;$(SolutionDir)dep\raylib;$(SolutionDir)dep\rlimgui;$(SolutionDir)vcpkg_installed\vcpkg\pkgs\raylib_x64-windows\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -158,7 +158,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="dep\rlimgui\rlImGui.cpp" />
     <ClCompile Include="src\grid.cpp" />
     <ClCompile Include="src\game-of-life.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -172,18 +171,6 @@
     <None Include="vcpkg_installed\vcpkg\pkgs\raylib_x64-windows\debug\bin\raylib.pdb" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="dep\include\imconfig.h" />
-    <ClInclude Include="dep\include\imgui.h" />
-    <ClInclude Include="dep\include\imgui_internal.h" />
-    <ClInclude Include="dep\include\imgui_stdlib.h" />
-    <ClInclude Include="dep\include\imstb_rectpack.h" />
-    <ClInclude Include="dep\include\imstb_textedit.h" />
-    <ClInclude Include="dep\include\imstb_truetype.h" />
-    <ClInclude Include="dep\include\extras\FA6FreeSolidFontData.h" />
-    <ClInclude Include="dep\include\extras\IconsFontAwesome6.h" />
-    <ClInclude Include="dep\include\imgui_impl_raylib.h" />
-    <ClInclude Include="dep\include\rlImGui.h" />
-    <ClInclude Include="dep\include\rlImGuiColors.h" />
     <ClInclude Include="src\game-of-life.h" />
   </ItemGroup>
   <ItemGroup>
