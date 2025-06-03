@@ -2,13 +2,6 @@
 # project specific logic here.
 #
 cmake_minimum_required (VERSION 3.8)
-
-# Enable Hot Reload for MSVC compilers if supported.
-if (POLICY CMP0141)
-  cmake_policy(SET CMP0141 NEW)
-  set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
-endif()
-
 project ("game-of-life")
 
 # in case I want to add modern language features later
@@ -16,7 +9,14 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# if can't build the .lib/.a from src, need all the FetchContent stuff
+# Enable Hot Reload for MSVC compilers if supported.
+if (POLICY CMP0141)
+  cmake_policy(SET CMP0141 NEW)
+  set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
+endif()
+
+
+# if can't build the .lib/.a from src, also need FetchContent
 include (FetchContent)
 FetchContent_Declare (
     raylib
@@ -49,7 +49,7 @@ add_executable (
 )
 
 # if can build .lib/.a from src, only need this
-target_link_libraries (${PROJECT_NAME} raylib)
+target_link_libraries (${PROJECT_NAME} PRIVATE raylib)
 
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
