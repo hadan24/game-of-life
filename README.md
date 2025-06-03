@@ -19,6 +19,8 @@ otherwise control the simulation to their liking.
         - (the full list of needed files is in my [`CMakeLists.txt`](CMakeLists.txt))
 3. Run and enjoy some cool blinking cells :)
 
+![demo gif of my Game of Life app :) - sHaDe](https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExbGVjeDFnaTRyMHlrYTZqOTdsZmF2aGdsZjRoZnZtMDBvczlyM2M1MiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/KGUd5nSLhLMvdSdJhd/giphy.gif)
+
 
 ### Schedule
 
