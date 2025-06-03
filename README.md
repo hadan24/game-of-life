@@ -9,11 +9,15 @@ otherwise control the simulation to their liking.
 
 ### Building
 
-For now, the dev build steps are simply:
-
-1. Clone/download the repo
-2. Open the `.sln` file with Visual Studio
-3. Build and run
+1. Clone the repo
+    - use `--recursive` if you do not have:
+        - the [DearImGUI](https://github.com/ocornut/imgui) or [rlImGui](https://github.com/raylib-extras/rlImGui) source files
+        - nor a pre-compiled [Raylib](https://github.com/raysan5/raylib) static library
+    - if using Visual Studio, don't forget to set the "Select Startup Item" field to `game-of-life.*`
+2. Build
+    - if building manually *without CMake*, be sure to compile the `DearImGui` and `rlImGui` source files alongside this project's sources
+        - (the full list of needed files is in my [`CMakeLists.txt`](CMakeLists.txt))
+3. Run and enjoy some cool blinking cells :)
 
 
 ### Schedule
@@ -27,7 +31,7 @@ Number  | Goal          | Timeline      | Notes
 5 | Tick vs Frame Rate  | 3/31 - 4/11   | - done 4/10 <br> [Github issue here](https://github.com/hadan24/game-of-life/issues/3)
 6 | Create UI           | 4/14 - 4/25   | - done 4/28 (technically 4/27, got a UI w/ original intended features working, was hoping to add screen wrapping but no time, it'll be new feature) <br> [Github issue here](https://github.com/hadan24/game-of-life/issues/6)
 7 | Screen Wrapping     | 4/28 - 5/2    | - done 5/3 (technically 5/2, spent more time to fix [mouse bounds bug](https://github.com/hadan24/game-of-life/issues/9)) <br> [goal's Github issue here](https://github.com/hadan24/game-of-life/issues/11)
-8 | Clean Code + Repo   | 5/19 - 5/30   | - <br> [Github issue here](https://github.com/hadan24/game-of-life/issues/12)
+8 | Clean Code + Repo   | 5/19 - 5/30   | - done 6/3, learning CMake and adapting this project to it was,,, an experience. Learned quite a bit though! <br> [Github issue here](https://github.com/hadan24/game-of-life/issues/12)
 
 #### Stretch Goals
 
