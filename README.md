@@ -35,6 +35,7 @@ Number  | Goal          | Timeline      | Notes
 --|---------------------|---------------|--------
 1 | Zoom In/Out         | TBD           | - moved back to stretch goal to move on to new project, may return sometime <br> [Github issue here](https://github.com/hadan24/game-of-life/issues/7)
 2 | Save UI configs     | TBD           | - <br> [Github issue here](https://github.com/hadan24/game-of-life/issues/13)
+3 | Sound Effects       | TBD           | - <br> [Github issue here](https://github.com/hadan24/game-of-life/issues/14)
 
 
 ### Resources/Notes to Self
