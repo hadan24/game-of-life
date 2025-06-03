@@ -1,9 +1,0 @@
-D:/projs/C++/game-of-life/vcpkg_installed/vcpkg/pkgs/glfw3_x64-windows/lib/glfw3dll.lib
-D:/projs/C++/game-of-life/vcpkg_installed/vcpkg/pkgs/glfw3_x64-windows/bin/glfw3.dll
-D:/projs/C++/game-of-life/vcpkg_installed/vcpkg/pkgs/glfw3_x64-windows/include/GLFW/glfw3.h
-D:/projs/C++/game-of-life/vcpkg_installed/vcpkg/pkgs/glfw3_x64-windows/include/GLFW/glfw3native.h
-D:/projs/C++/game-of-life/vcpkg_installed/vcpkg/pkgs/glfw3_x64-windows/lib/cmake/glfw3/glfw3Config.cmake
-D:/projs/C++/game-of-life/vcpkg_installed/vcpkg/pkgs/glfw3_x64-windows/lib/cmake/glfw3/glfw3ConfigVersion.cmake
-D:/projs/C++/game-of-life/vcpkg_installed/vcpkg/pkgs/glfw3_x64-windows/lib/cmake/glfw3/glfw3Targets.cmake
-D:/projs/C++/game-of-life/vcpkg_installed/vcpkg/pkgs/glfw3_x64-windows/lib/cmake/glfw3/glfw3Targets-release.cmake
-D:/projs/C++/game-of-life/vcpkg_installed/vcpkg/pkgs/glfw3_x64-windows/lib/pkgconfig/glfw3.pc

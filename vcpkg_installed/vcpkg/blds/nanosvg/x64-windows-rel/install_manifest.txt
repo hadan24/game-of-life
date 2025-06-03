@@ -1,8 +1,0 @@
-D:/projs/C++/game-of-life/vcpkg_installed/vcpkg/pkgs/nanosvg_x64-windows/lib/nanosvg.lib
-D:/projs/C++/game-of-life/vcpkg_installed/vcpkg/pkgs/nanosvg_x64-windows/lib/nanosvgrast.lib
-D:/projs/C++/game-of-life/vcpkg_installed/vcpkg/pkgs/nanosvg_x64-windows/include/nanosvg/nanosvg.h
-D:/projs/C++/game-of-life/vcpkg_installed/vcpkg/pkgs/nanosvg_x64-windows/include/nanosvg/nanosvgrast.h
-D:/projs/C++/game-of-life/vcpkg_installed/vcpkg/pkgs/nanosvg_x64-windows/lib/cmake/NanoSVG/NanoSVGTargets.cmake
-D:/projs/C++/game-of-life/vcpkg_installed/vcpkg/pkgs/nanosvg_x64-windows/lib/cmake/NanoSVG/NanoSVGTargets-release.cmake
-D:/projs/C++/game-of-life/vcpkg_installed/vcpkg/pkgs/nanosvg_x64-windows/lib/cmake/NanoSVG/NanoSVGConfig.cmake
-D:/projs/C++/game-of-life/vcpkg_installed/vcpkg/pkgs/nanosvg_x64-windows/lib/cmake/NanoSVG/NanoSVGConfigVersion.cmake
