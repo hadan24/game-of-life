@@ -1,0 +1,9 @@
+[submodule "dep/imgui"]
+	path = dep/imgui
+	url = https://github.com/ocornut/imgui.git
+[submodule "dep/raylib"]
+	path = dep/raylib
+	url = https://github.com/raysan5/raylib.git
+[submodule "dep/rlimgui"]
+	path = dep/rlimgui
+	url = https://github.com/raylib-extras/rlImGui.git
