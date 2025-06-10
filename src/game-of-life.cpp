@@ -188,6 +188,7 @@ namespace Life
         Text("FPS: %d", GetFPS());
         NewLine();
 
+        Text("Press Esc to close the app.");
         Text("Left-click to spawn (light up) cells.");
         Text("Right-click to kill (turn off) cells.");
         Text("Hold click to easily affect many cells.");
