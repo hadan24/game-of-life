@@ -51,6 +51,14 @@ add_executable (
 # if can build .lib/.a from src, only need this
 target_link_libraries (${PROJECT_NAME} PRIVATE raylib)
 
+# Hide console window in Release mode
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    set_target_properties(
+        ${PROJECT_NAME} PROPERTIES
+        LINK_FLAGS "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup"
+    )
+endif()
+
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)

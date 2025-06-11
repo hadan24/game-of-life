@@ -182,7 +182,7 @@ namespace Life
     void Game::ui()
     {
         using namespace ImGui;
-        SetNextWindowSize({ 340, 420 });
+        SetNextWindowSize({ 340, 425 });
         Begin("Simulation Dashboard", NULL);
 
         Text("FPS: %d", GetFPS());
